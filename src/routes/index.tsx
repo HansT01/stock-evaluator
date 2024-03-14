@@ -286,9 +286,12 @@ const StockCalculator = () => {
           <div class='rounded-lg border border-primary bg-background px-3 py-2 font-mono text-background-fg'>
             Share price: {YFData()?.sharePrice || NaN}
           </div>
-          <div class='rounded-lg border border-primary bg-background px-3 py-2 font-mono text-background-fg'>
+          <button
+            onClick={() => document.getElementById('value-rating')?.scrollIntoView()}
+            class='rounded-lg border border-primary bg-background px-3 py-2 font-mono text-background-fg'
+          >
             Value rating: {formatPct(valueRating(), true)}
-          </div>
+          </button>
         </div>
         <div class='min-h-[400px] w-full rounded-lg border border-primary bg-background px-3 py-2 text-background-fg'>
           <Show when={getChartProps()}>{(props) => <GrowthChart {...props()} />}</Show>
@@ -494,7 +497,7 @@ const StockCalculator = () => {
                   <td class='border border-primary px-3 py-2'>Investment</td>
                   <td class='border border-primary px-3 py-2'>{formatNum(investment())}</td>
                 </tr>
-                <tr>
+                <tr id='value-rating'>
                   <td class='border border-primary px-3 py-2'>Value rating</td>
                   <td class='border border-primary px-3 py-2'>{formatPct(valueRating(), true)}</td>
                 </tr>
