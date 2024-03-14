@@ -267,7 +267,7 @@ const StockCalculator = () => {
                       class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
                         'bg-primary': growthIndicator() === 'revenues',
                       })}
-                    ></button>
+                    />
                   </td>
                 </tr>
                 <tr>
@@ -279,7 +279,7 @@ const StockCalculator = () => {
                       class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
                         'bg-primary': growthIndicator() === 'earnings',
                       })}
-                    ></button>
+                    />
                   </td>
                 </tr>
                 <tr>
@@ -291,7 +291,7 @@ const StockCalculator = () => {
                       class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
                         'bg-primary': growthIndicator() === 'dividends',
                       })}
-                    ></button>
+                    />
                   </td>
                 </tr>
                 <tr>
@@ -303,7 +303,7 @@ const StockCalculator = () => {
                       class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
                         'bg-primary': growthIndicator() === 'freeCashFlows',
                       })}
-                    ></button>
+                    />
                   </td>
                 </tr>
                 <tr>
@@ -326,7 +326,7 @@ const StockCalculator = () => {
                       class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
                         'bg-primary': growthIndicator() === 'custom',
                       })}
-                    ></button>
+                    />
                   </td>
                 </tr>
               </tbody>
@@ -349,7 +349,7 @@ const StockCalculator = () => {
                       class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
                         'bg-primary': investmentOption() === 'enterpriseValue',
                       })}
-                    ></button>
+                    />
                   </td>
                 </tr>
                 <tr>
@@ -361,7 +361,7 @@ const StockCalculator = () => {
                       class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
                         'bg-primary': investmentOption() === 'marketCap',
                       })}
-                    ></button>
+                    />
                   </td>
                 </tr>
               </tbody>
