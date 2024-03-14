@@ -89,32 +89,34 @@ export const YFinanceSearch: Component<SearchProps> = (props) => {
         </button>
       </form>
       <div class='absolute left-0 right-0 mt-4 w-full'>
-        <Show
-          when={quotes().length !== 0}
-          fallback={
-            <Show when={isFetchingQuotes()}>
-              <div class='flex min-h-[68px] items-center justify-center rounded-lg border border-primary bg-background text-background-fg'>
-                <LoaderIcon class='animate-spin' />
-              </div>
-            </Show>
-          }
-        >
-          <div class='flex flex-col items-stretch divide-y divide-primary overflow-hidden rounded-lg border border-primary bg-background text-background-fg'>
-            <For each={quotes()}>
-              {(quote) => (
-                <button
-                  onClick={() => handleSelectQuote(quote)}
-                  class='flex flex-col items-stretch px-3 py-2 text-left hover:bg-accent hover:text-accent-fg focus:bg-accent focus:text-accent-fg'
-                >
-                  <div class='line-clamp-1 text-lg font-light'>{quote.longname}</div>
-                  <div class='flex flex-wrap'>
-                    <div class='line-clamp-1 grow'>{quote.industryDisp}</div>
-                    <div class='line-clamp-1'>{`${quote.exchDisp}: ${quote.symbol}`}</div>
-                  </div>
-                </button>
-              )}
-            </For>
-          </div>
+        <Show when={isFocused()}>
+          <Show
+            when={quotes().length !== 0}
+            fallback={
+              <Show when={isFetchingQuotes()}>
+                <div class='flex min-h-[68px] items-center justify-center rounded-lg border border-primary bg-background text-background-fg'>
+                  <LoaderIcon class='animate-spin' />
+                </div>
+              </Show>
+            }
+          >
+            <div class='flex flex-col items-stretch divide-y divide-primary overflow-hidden rounded-lg border border-primary bg-background text-background-fg'>
+              <For each={quotes()}>
+                {(quote) => (
+                  <button
+                    onClick={() => handleSelectQuote(quote)}
+                    class='flex flex-col items-stretch px-3 py-2 text-left hover:bg-accent hover:text-accent-fg focus:bg-accent focus:text-accent-fg'
+                  >
+                    <div class='line-clamp-1 text-lg font-light'>{quote.longname}</div>
+                    <div class='flex flex-wrap'>
+                      <div class='line-clamp-1 grow'>{quote.industryDisp}</div>
+                      <div class='line-clamp-1'>{`${quote.exchDisp}: ${quote.symbol}`}</div>
+                    </div>
+                  </button>
+                )}
+              </For>
+            </div>
+          </Show>
         </Show>
       </div>
     </div>
