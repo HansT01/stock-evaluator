@@ -88,8 +88,8 @@ export const YFinanceSearch: Component<SearchProps> = (props) => {
           {isFetchingData() ? <LoaderIcon class='animate-spin' size={20} /> : <SearchIcon size={20} />}
         </button>
       </form>
-      <div class='absolute left-0 right-0 mt-4 w-full'>
-        <Show when={isFocused()}>
+      <Show when={isFocused()}>
+        <div class='absolute left-0 right-0 mt-4 w-full'>
           <Show
             when={quotes().length !== 0}
             fallback={
@@ -117,8 +117,8 @@ export const YFinanceSearch: Component<SearchProps> = (props) => {
               </For>
             </div>
           </Show>
-        </Show>
-      </div>
+        </div>
+      </Show>
     </div>
   )
 }
