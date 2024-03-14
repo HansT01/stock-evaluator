@@ -73,7 +73,7 @@ const GrowthChart: Component<GrowthChartProps> = (props) => {
   return <canvas ref={(el) => (ref = el)} />
 }
 
-type GrowthIndicator = 'revenues' | 'earnings' | 'dividends' | 'freeCashFlows'
+type GrowthIndicator = 'revenues' | 'earnings' | 'dividends' | 'freeCashFlows' | 'custom'
 
 const StockCalculator = () => {
   const [YFData, setYFData] = createSignal<YFinanceData | null>(null)
@@ -83,6 +83,7 @@ const StockCalculator = () => {
     discountRate: 0.2,
     growingYears: 5,
     terminalGrowth: 0,
+    customGrowth: 0,
   })
   const [growthIndicator, setGrowthIndicator] = createSignal<GrowthIndicator>('revenues')
   const [investmentOption, setInvestmentOption] = createSignal<'marketCap' | 'enterpriseValue'>('enterpriseValue')
@@ -99,7 +100,7 @@ const StockCalculator = () => {
     return mean / Math.max(data.marketCap || 0, data.enterpriseValue || 0)
   })
 
-  const fitGrowth = (indicator: GrowthIndicator) => {
+  const fitGrowth = (indicator: Exclude<GrowthIndicator, 'custom'>) => {
     const data = YFData()
     if (data === null) {
       return { constant: NaN, base: NaN }
@@ -135,6 +136,9 @@ const StockCalculator = () => {
   }
 
   const calculateGrowth = (indicator: GrowthIndicator) => {
+    if (indicator === 'custom') {
+      return parameters().customGrowth
+    }
     return fitGrowth(indicator).base - 1
   }
 
@@ -183,17 +187,18 @@ const StockCalculator = () => {
 
   const getChartProps = createMemo(() => {
     const data = YFData()
-    if (data === null) {
+    const indicator = growthIndicator()
+    if (data === null || indicator === 'custom') {
       return null
     }
-    const label = `Historical ${formatCamelCase(growthIndicator())}`
+    const label = `Historical ${formatCamelCase(indicator)}`
     const xData = data.fiscalYearEnds.map((end) => dayjs(end).year())
-    const yData = data[growthIndicator()]
+    const yData = data[indicator]
     for (let i = 0; i < parameters().growingYears; i++) {
       xData.push(xData[xData.length - 1] + 1)
       yData.push(null)
     }
-    const { constant, base } = fitGrowth(growthIndicator())
+    const { constant, base } = fitGrowth(indicator)
     const yGrowth = []
     for (let x of xData) {
       yGrowth.push(constant * base ** x)
@@ -297,6 +302,29 @@ const StockCalculator = () => {
                       onClick={() => setGrowthIndicator('freeCashFlows')}
                       class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
                         'bg-primary': growthIndicator() === 'freeCashFlows',
+                      })}
+                    ></button>
+                  </td>
+                </tr>
+                <tr>
+                  <td class='border border-primary px-3 py-2'>Custom growth</td>
+                  <td class='border border-primary px-3 py-2'>
+                    <input
+                      type='text'
+                      autocomplete='none'
+                      value={formatPct(parameters().customGrowth)}
+                      onFocusIn={(e) => e.target.select()}
+                      onFocusOut={(e) =>
+                        setParameters({ ...parameters(), customGrowth: parseFloat(e.target.value) / 100 })
+                      }
+                      class='h-full w-full min-w-0 border-0 bg-background text-background-fg'
+                    />
+                  </td>
+                  <td class='relative w-[41px] border border-primary'>
+                    <button
+                      onClick={() => setGrowthIndicator('custom')}
+                      class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
+                        'bg-primary': growthIndicator() === 'custom',
                       })}
                     ></button>
                   </td>
