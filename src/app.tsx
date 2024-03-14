@@ -5,8 +5,10 @@ import './app.css'
 
 export default function App() {
   return (
-    <Router root={(props) => <Suspense>{props.children}</Suspense>}>
-      <FileRoutes />
-    </Router>
+    <div class='dark:dark bg-background text-background-fg'>
+      <Router root={(props) => <Suspense>{props.children}</Suspense>}>
+        <FileRoutes />
+      </Router>
+    </div>
   )
 }

@@ -13,4 +13,14 @@
     --secondary: #6b91aa;
     --secondary-fg: #fdfefe;
   }
+  .dark {
+    --background: #012034;
+    --background-fg: #fdfefe;
+    --accent: #022e4a;
+    --accent-fg: #fdfefe;
+    --primary: #fdfefe;
+    --primary-fg: #012034;
+    --secondary: #a5a7a8;
+    --secondary-fg: #012034;
+  }
 }
