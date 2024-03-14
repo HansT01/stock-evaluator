@@ -74,7 +74,10 @@ export const YFinanceSearch: Component<SearchProps> = (props) => {
           type='text'
           autocomplete='off'
           value={ticker()}
-          onFocusIn={() => setIsFocused(true)}
+          onFocusIn={(e) => {
+            e.target.select()
+            setIsFocused(true)
+          }}
           onChange={(e) => setTicker(e.target.value)}
           onKeyUp={handleKeyUp}
           class='min-w-0 max-w-full grow rounded-s-full border border-primary bg-background px-4 py-2 text-background-fg'
