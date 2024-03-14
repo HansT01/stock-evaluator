@@ -4,31 +4,7 @@ import { Component, Show, createEffect, createMemo, createSignal, onCleanup, onM
 import { LoaderIcon, SearchIcon } from '~/components/icons'
 import { cn } from '~/util/cn'
 import { formatCamelCase, formatNum, formatPct } from '~/util/format'
-
-interface YFinanceData {
-  name: string
-  summary: string
-  industry: string
-  currency: string
-  sharePrice: number
-  marketCap: number
-  enterpriseValue: number
-  fiscalYearEnds: string[]
-  revenues: (number | null)[]
-  earnings: (number | null)[]
-  dividends: (number | null)[]
-  freeCashFlows: (number | null)[]
-}
-
-const getYFinanceData = async (ticker: string) => {
-  'use server'
-  const response = await fetch(`${process.env.VITE_YFINANCE_APP_URL}?ticker=${ticker}`)
-  if (response.status !== 200) {
-    throw new Error(`Server responded with status code: ${response.status}`)
-  }
-  const data: YFinanceData = await response.json()
-  return data
-}
+import { YFinanceData, getYFinanceData, getYFinanceQuotes } from '~/util/yfinance'
 
 interface GrowthChartProps {
   label: string
@@ -249,6 +225,7 @@ const StockCalculator = () => {
             autocomplete='off'
             class='min-w-0 max-w-full grow rounded-s-full border border-primary bg-background px-4 py-2 uppercase text-background-fg'
             value={ticker()}
+            onInput={(e) => getYFinanceQuotes(e.target.value)}
             onChange={(e) => setTicker(e.target.value)}
           />
           <button
