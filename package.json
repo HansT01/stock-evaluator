@@ -1,5 +1,5 @@
 {
-  "name": "example-with-tailwindcss",
+  "name": "stock-evaluator",
   "type": "module",
   "scripts": {
     "dev": "vinxi dev",
