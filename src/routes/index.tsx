@@ -1,10 +1,10 @@
 import { Chart } from 'chart.js/auto'
 import dayjs from 'dayjs'
 import { Component, Show, createEffect, createMemo, createSignal, onCleanup, onMount } from 'solid-js'
-import { LoaderIcon, SearchIcon } from '~/components/icons'
+import { YFinanceSearch } from '~/components/search'
 import { cn } from '~/util/cn'
 import { formatCamelCase, formatNum, formatPct } from '~/util/format'
-import { YFinanceData, getYFinanceData, getYFinanceQuotes } from '~/util/yfinance'
+import { YFinanceData } from '~/util/yfinance'
 
 interface GrowthChartProps {
   label: string
@@ -77,8 +77,6 @@ type GrowthIndicator = 'revenues' | 'earnings' | 'dividends' | 'freeCashFlows'
 
 const StockCalculator = () => {
   const [YFData, setYFData] = createSignal<YFinanceData | null>(null)
-  const [ticker, setTicker] = createSignal('')
-  const [isFetching, setIsFetching] = createSignal(false)
   const [isReadMore, setIsReadMore] = createSignal(false)
 
   const [parameters, setParameters] = createSignal({
@@ -204,41 +202,9 @@ const StockCalculator = () => {
     return { label, xData: xDataStr, yData, yGrowth }
   })
 
-  const handleFetchData = (e: Event) => {
-    if (isFetching()) {
-      return
-    }
-    e.preventDefault()
-    setIsFetching(true)
-    getYFinanceData(ticker())
-      .then(setYFData)
-      .catch(console.error)
-      .finally(() => setIsFetching(false))
-  }
-
   return (
     <main class='container mx-auto flex min-h-svh max-w-screen-lg flex-col gap-8 bg-accent p-4 text-accent-fg sm:p-8'>
-      <div class='sticky top-4 z-10 mx-auto w-[500px] max-w-full px-4'>
-        <form onSubmit={handleFetchData} class='flex w-full items-stretch'>
-          <input
-            type='text'
-            autocomplete='off'
-            class='min-w-0 max-w-full grow rounded-s-full border border-primary bg-background px-4 py-2 uppercase text-background-fg'
-            value={ticker()}
-            onInput={(e) => getYFinanceQuotes(e.target.value)}
-            onChange={(e) => setTicker(e.target.value)}
-          />
-          <button
-            type='submit'
-            class='flex w-[72px] max-w-full items-center justify-center rounded-e-full bg-primary px-4 py-2 text-primary-fg'
-            disabled={isFetching()}
-            onClick={handleFetchData}
-          >
-            {isFetching() ? <LoaderIcon class='animate-spin' size={20} /> : <SearchIcon size={20} />}
-          </button>
-        </form>
-      </div>
-      {/* <div class='pointer-events-none fixed inset-0 cursor-pointer bg-primary opacity-20'></div> */}
+      <YFinanceSearch onSuccess={setYFData} onError={console.error} />
       <div class='flex flex-col gap-8'>
         <div class='flex min-h-[96px] flex-col gap-2 px-3'>
           <div class='text-6xl font-thin'>{YFData()?.name}</div>

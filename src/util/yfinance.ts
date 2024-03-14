@@ -36,18 +36,19 @@ export interface YFinanceQuote {
   exchange: string
   exchDisp: string
   symbol: string
+  quoteType: string
 }
 
-export const getYFinanceQuotes = async (search: string) => {
+export const getYFinanceQuotes = async (query: string) => {
   'use server'
   const url =
     `${process.env.VITE_YFINANCE_QUOTE_URL}?` +
     new URLSearchParams({
-      'q': search,
+      'q': query,
       'lang': 'en-US',
       'region': 'US',
       'enableFuzzyQuery': 'false',
-      'quotesCount': '5',
+      'quotesCount': '10',
       'newsCount': '0',
       'listsCount': '0',
     })
@@ -55,6 +56,6 @@ export const getYFinanceQuotes = async (search: string) => {
   if (response.status !== 200) {
     throw new Error(`Server responded with status code: ${response.status}`)
   }
-  const { quotes } = await response.json()
-  return quotes as YFinanceQuote[]
+  const { quotes } = (await response.json()) as { quotes: YFinanceQuote[] }
+  return quotes.filter((quote) => quote.quoteType === 'EQUITY').slice(0, 5)
 }
