@@ -426,7 +426,7 @@ const StockCalculator = () => {
               <thead>
                 <tr>
                   <td colSpan={2} class='border border-primary px-3 py-2 font-bold'>
-                    Parameters
+                    Parameters (Custom input)
                   </td>
                 </tr>
               </thead>
