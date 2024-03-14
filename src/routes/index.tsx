@@ -260,14 +260,14 @@ const StockCalculator = () => {
         </button>
       </form>
       <div class='flex flex-col gap-8'>
-        <div class='flex flex-col gap-2 px-3'>
+        <div class='flex min-h-[96px] flex-col gap-2 px-3'>
           <div class='text-6xl font-thin'>{YFData()?.name}</div>
           <div class='text-xl font-light'>{YFData()?.industry}</div>
         </div>
-        <div class='flex flex-col items-center gap-2 rounded-lg border border-primary bg-background px-3 py-2 text-background-fg'>
+        <div class='flex min-h-[122px] flex-col items-center gap-2 rounded-lg border border-primary bg-background px-3 py-2 text-background-fg'>
           <p
             class={cn(
-              'line-clamp-3 bg-gradient-to-b from-background-fg to-transparent bg-clip-text text-left text-transparent',
+              'line-clamp-3 grow bg-gradient-to-b from-background-fg to-transparent bg-clip-text text-left text-transparent',
               {
                 'line-clamp-none text-background-fg': isReadMore(),
               },
@@ -280,13 +280,13 @@ const StockCalculator = () => {
           </button>
         </div>
         <div class='flex flex-wrap gap-4'>
-          <div class='font-mono rounded-lg border border-primary bg-background px-3 py-2 text-background-fg'>
+          <div class='rounded-lg border border-primary bg-background px-3 py-2 font-mono text-background-fg'>
             Currency: {YFData()?.currency || 'N/A'}
           </div>
-          <div class='font-mono rounded-lg border border-primary bg-background px-3 py-2 text-background-fg'>
+          <div class='rounded-lg border border-primary bg-background px-3 py-2 font-mono text-background-fg'>
             Share price: {YFData()?.sharePrice || NaN}
           </div>
-          <div class='font-mono rounded-lg border border-primary bg-background px-3 py-2 text-background-fg'>
+          <div class='rounded-lg border border-primary bg-background px-3 py-2 font-mono text-background-fg'>
             Value rating: {formatPct(valueRating(), true)}
           </div>
         </div>
@@ -295,7 +295,7 @@ const StockCalculator = () => {
         </div>
         <div class='flex flex-col gap-8 md:flex-row'>
           <div class='flex basis-full flex-col gap-8'>
-            <table class='font-mono table-fixed rounded-lg border border-primary bg-background text-background-fg'>
+            <table class='table-fixed rounded-lg border border-primary bg-background font-mono text-background-fg'>
               <thead>
                 <tr>
                   <td colSpan={3} class='border border-primary px-3 py-2 font-bold'>
@@ -354,7 +354,7 @@ const StockCalculator = () => {
                 </tr>
               </tbody>
             </table>
-            <table class='font-mono table-fixed bg-background text-background-fg'>
+            <table class='table-fixed bg-background font-mono text-background-fg'>
               <thead>
                 <tr>
                   <td colSpan={3} class='border border-primary px-3 py-2 font-bold'>
@@ -389,7 +389,7 @@ const StockCalculator = () => {
                 </tr>
               </tbody>
             </table>
-            <table class='font-mono table-fixed bg-background text-background-fg'>
+            <table class='table-fixed bg-background font-mono text-background-fg'>
               <thead>
                 <tr>
                   <td colSpan={3} class='border border-primary px-3 py-2 font-bold'>
@@ -419,7 +419,7 @@ const StockCalculator = () => {
             </table>
           </div>
           <div class='flex basis-full flex-col gap-8'>
-            <table class='font-mono table-fixed bg-background text-background-fg'>
+            <table class='table-fixed bg-background font-mono text-background-fg'>
               <thead>
                 <tr>
                   <td colSpan={2} class='border border-primary px-3 py-2 font-bold'>
@@ -473,7 +473,7 @@ const StockCalculator = () => {
                 </tr>
               </tbody>
             </table>
-            <table class='font-mono table-fixed bg-background text-background-fg'>
+            <table class='table-fixed bg-background font-mono text-background-fg'>
               <thead>
                 <tr>
                   <td colSpan={2} class='border border-primary px-3 py-2 font-bold'>
