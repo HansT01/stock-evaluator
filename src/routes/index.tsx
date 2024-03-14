@@ -14,7 +14,7 @@ interface GrowthChartProps {
 }
 
 const GrowthChart: Component<GrowthChartProps> = (props) => {
-  let chart: Chart
+  let chart: Chart<'line'>
   let ref: HTMLCanvasElement
 
   onMount(() => {
@@ -56,6 +56,14 @@ const GrowthChart: Component<GrowthChartProps> = (props) => {
         },
       },
     })
+
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      chart.options.color = '#fdfefe'
+      chart.options.scales!.x!.grid!.color = '#a5a7a8'
+      chart.options.scales!.x!.ticks!.color = '#fdfefe'
+      chart.options.scales!.y!.grid!.color = '#a5a7a8'
+      chart.options.scales!.y!.ticks!.color = '#fdfefe'
+    }
 
     onCleanup(() => {
       chart.destroy()
