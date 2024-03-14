@@ -1,0 +1,29 @@
+{
+  "name": "example-with-tailwindcss",
+  "type": "module",
+  "scripts": {
+    "dev": "vinxi dev",
+    "build": "vinxi build",
+    "start": "vinxi start"
+  },
+  "dependencies": {
+    "@solidjs/router": "^0.13.0",
+    "@solidjs/start": "^0.7.2",
+    "autoprefixer": "^10.4.14",
+    "chart.js": "^4.4.2",
+    "clsx": "^2.1.0",
+    "dayjs": "^1.11.10",
+    "postcss": "^8.4.26",
+    "solid-js": "^1.8.15",
+    "tailwind-merge": "^2.2.1",
+    "tailwindcss": "^3.3.3",
+    "vinxi": "^0.3.10"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.5.12"
+  }
+}
