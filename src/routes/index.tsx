@@ -260,7 +260,7 @@ const StockCalculator = () => {
               <tbody>
                 <tr>
                   <td class='border border-primary px-3 py-2'>Revenues growth</td>
-                  <td class='w-[90px] border border-primary px-3 py-2'>{formatPct(calculateGrowth('revenues'))}</td>
+                  <td class='w-[96px] border border-primary px-3 py-2'>{formatPct(calculateGrowth('revenues'))}</td>
                   <td class='relative w-[41px] border border-primary'>
                     <button
                       onClick={() => setGrowthIndicator('revenues')}
@@ -342,7 +342,7 @@ const StockCalculator = () => {
               <tbody>
                 <tr>
                   <td class='border border-primary px-3 py-2'>Enterprise value</td>
-                  <td class='w-[90px] border border-primary px-3 py-2'>{formatNum(YFData()?.enterpriseValue)}</td>
+                  <td class='w-[96px] border border-primary px-3 py-2'>{formatNum(YFData()?.enterpriseValue)}</td>
                   <td class='relative w-[41px] border border-primary'>
                     <button
                       onClick={() => setInvestmentOption('enterpriseValue')}
@@ -377,7 +377,7 @@ const StockCalculator = () => {
               <tbody>
                 <tr>
                   <td class='border border-primary px-3 py-2'>Dividend yield</td>
-                  <td class='w-[90px] border border-primary px-3 py-2'>{formatPct(dividendYield())}</td>
+                  <td class='w-[96px] border border-primary px-3 py-2'>{formatPct(dividendYield())}</td>
                   <td class='relative w-[41px] border border-primary'>
                     <button
                       onClick={() =>
@@ -407,7 +407,7 @@ const StockCalculator = () => {
               <tbody>
                 <tr>
                   <td class='border border-primary px-3 py-2'>Discount rate</td>
-                  <td class='w-[131px] border border-primary px-3 py-2'>
+                  <td class='w-[137px] border border-primary px-3 py-2'>
                     <input
                       type='text'
                       autocomplete='none'
@@ -461,7 +461,7 @@ const StockCalculator = () => {
               <tbody>
                 <tr>
                   <td class='border border-primary px-3 py-2'>Projected growth</td>
-                  <td class='w-[131px] border border-primary px-3 py-2'>{formatPct(projectedGrowth())}</td>
+                  <td class='w-[137px] border border-primary px-3 py-2'>{formatPct(projectedGrowth())}</td>
                 </tr>
                 <tr>
                   <td class='border border-primary px-3 py-2'>Intrinsic value</td>
