@@ -5,6 +5,7 @@ import { YFinanceData } from '~/api/yfinance'
 import { YFinanceSearch } from '~/components/search'
 import { cn } from '~/utils/cn'
 import { formatCamelCase, formatNum, formatPct } from '~/utils/format'
+import { fitExponential } from '~/utils/math'
 
 interface GrowthChartProps {
   label: string
@@ -83,7 +84,7 @@ const GrowthChart: Component<GrowthChartProps> = (props) => {
 
 type GrowthIndicator = 'revenues' | 'earnings' | 'dividends' | 'freeCashFlows' | 'custom'
 
-const StockCalculator = () => {
+const StockEvaluator = () => {
   const [YFData, setYFData] = createSignal<YFinanceData | null>(null)
   const [isReadMore, setIsReadMore] = createSignal(false)
 
@@ -105,49 +106,20 @@ const StockCalculator = () => {
       return NaN
     }
     const mean = data.dividends.reduce<number>((acc, val) => acc + (val ?? 0), 0) / data.dividends.length
-    return mean / Math.max(data.marketCap ?? 0, data.enterpriseValue ?? 0)
+    return mean / data[investmentOption()]
   })
-
-  const fitGrowth = (indicator: Exclude<GrowthIndicator, 'custom'>) => {
-    const data = YFData()
-    if (data === null) {
-      return { constant: NaN, base: NaN }
-    }
-    const x: number[] = []
-    const y: number[] = []
-    const logY: number[] = []
-    const xSqr: number[] = []
-    const xLogY: number[] = []
-    for (let i = 0; i < data.fiscalYearEnds.length; i++) {
-      const xValue = dayjs(data.fiscalYearEnds[i]).year()
-      const yValue = data[indicator][i]
-      if (yValue === null) {
-        continue
-      }
-      x.push(xValue)
-      y.push(yValue)
-      logY.push(Math.log(yValue))
-      xSqr.push(xValue ** 2)
-      xLogY.push(xValue * Math.log(yValue))
-    }
-    const xSum = x.reduce((acc, val) => acc + val, 0)
-    const ySum = y.reduce((acc, val) => acc + val, 0)
-    const logYSum = logY.reduce((acc, val) => acc + val, 0)
-    const xSqrSum = xSqr.reduce((acc, val) => acc + val, 0)
-    const xLogYSum = xLogY.reduce((acc, val) => acc + val, 0)
-    const slope = (x.length * xLogYSum - xSum * logYSum) / (x.length * xSqrSum - xSum ** 2)
-    const base = Math.exp(slope)
-    const xMean = xSum / x.length
-    const yMean = ySum / y.length
-    const constant = yMean / base ** xMean
-    return { constant, base }
-  }
 
   const calculateGrowth = (indicator: GrowthIndicator) => {
     if (indicator === 'custom') {
       return parameters().customGrowth
     }
-    return fitGrowth(indicator).base - 1
+    const data = YFData()
+    if (data === null) {
+      return NaN
+    }
+    const xData = data.fiscalYearEnds.map((date) => dayjs(date).year())
+    const yData = data[indicator]
+    return fitExponential(xData, yData).base - 1
   }
 
   const projectedGrowth = createMemo(() => {
@@ -200,13 +172,13 @@ const StockCalculator = () => {
       return null
     }
     const label = `Historical ${formatCamelCase(indicator)}`
-    const xData = data.fiscalYearEnds.map((end) => dayjs(end).year())
+    const xData = data.fiscalYearEnds.map((date) => dayjs(date).year())
     const yData = data[indicator]
+    const { constant, base } = fitExponential(xData, yData)
     for (let i = 0; i < parameters().growingYears; i++) {
       xData.push(xData[xData.length - 1] + 1)
       yData.push(null)
     }
-    const { constant, base } = fitGrowth(indicator)
     const yGrowth = []
     for (let x of xData) {
       yGrowth.push(constant * base ** x)
@@ -492,4 +464,4 @@ const StockCalculator = () => {
   )
 }
 
-export default StockCalculator
+export default StockEvaluator
