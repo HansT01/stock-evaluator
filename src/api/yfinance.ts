@@ -15,7 +15,7 @@ const getCrumb = async (cookie: string) => {
     },
   })
   if (!res.ok) {
-    throw new Error(`Status code: ${res.status}; Error: ${await res.text()}`)
+    throw new Error(`Status: ${res.status}; Body: ${await res.text()}`)
   }
   const crumb = await res.text()
   return crumb
@@ -49,7 +49,7 @@ const getTimeSeries = async (ticker: string) => {
     })
   const res = await fetch(url)
   if (!res.ok) {
-    throw new Error(`Status code: ${res.status}; Error: ${await res.text()}`)
+    throw new Error(`Status: ${res.status}; Body: ${await res.text()}`)
   }
   const raw = await res.json()
 
@@ -100,7 +100,7 @@ const getQuoteSummary = async (ticker: string) => {
     },
   })
   if (!res.ok) {
-    throw new Error(`Status code: ${res.status}; Error: ${await res.text()}`)
+    throw new Error(`Status: ${res.status}; Body: ${await res.text()}`)
   }
   const raw = await res.json()
 
@@ -190,7 +190,7 @@ export const getYFinanceQuotes = async (query: string) => {
     })
   const res = await fetch(url)
   if (!res.ok) {
-    throw new Error(`Status code: ${res.status}; Error: ${await res.text()}`)
+    throw new Error(`Status: ${res.status}; Body: ${await res.text()}`)
   }
   const raw = await res.json()
 
