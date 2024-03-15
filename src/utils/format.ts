@@ -1,5 +1,6 @@
 export const formatNum = (number?: number | null, significantFigures?: number) => {
-  if (number === undefined || number === null || Number.isNaN(number)) {
+  number ??= NaN
+  if (Number.isNaN(number)) {
     return 'NaN'
   }
   const sigFig = significantFigures !== undefined ? significantFigures : 4
@@ -16,7 +17,8 @@ export const formatNum = (number?: number | null, significantFigures?: number) =
 }
 
 export const formatPct = (number?: number | null, noSign?: boolean) => {
-  if (number === undefined || number === null || Number.isNaN(number)) {
+  number ??= NaN
+  if (Number.isNaN(number)) {
     return 'NaN'
   }
   if (noSign) {

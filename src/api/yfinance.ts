@@ -141,10 +141,16 @@ export const getYFinanceData = async (ticker: string) => {
   const enterpriseValue =
     quoteSummary.marketCap + recentYearEnd.annualTotalDebt! + recentYearEnd.annualCashAndCashEquivalents!
 
-  const revenues = fiscalYearEnds.map((year) => timeSeries[year].annualTotalRevenue || null)
-  const earnings = fiscalYearEnds.map((year) => timeSeries[year].annualNetIncome || null)
-  const dividends = fiscalYearEnds.map((year) => timeSeries[year].annualCashDividendsPaid || null)
-  const freeCashFlows = fiscalYearEnds.map((year) => timeSeries[year].annualFreeCashFlow || null)
+  const revenues = fiscalYearEnds.map((year) => timeSeries[year].annualTotalRevenue ?? null)
+  const earnings = fiscalYearEnds.map((year) => timeSeries[year].annualNetIncome ?? null)
+  const dividends = fiscalYearEnds.map((year) => {
+    const dividends = timeSeries[year].annualCashDividendsPaid
+    if (dividends === undefined) {
+      return null
+    }
+    return -dividends
+  })
+  const freeCashFlows = fiscalYearEnds.map((year) => timeSeries[year].annualFreeCashFlow ?? null)
 
   const data: YFinanceData = {
     ...quoteSummary,

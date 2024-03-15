@@ -104,8 +104,8 @@ const StockCalculator = () => {
     if (data === null) {
       return NaN
     }
-    const mean = data.dividends.reduce<number>((acc, val) => acc + (val || 0), 0) / data.dividends.length
-    return mean / Math.max(data.marketCap || 0, data.enterpriseValue || 0)
+    const mean = data.dividends.reduce<number>((acc, val) => acc + (val ?? 0), 0) / data.dividends.length
+    return mean / Math.max(data.marketCap ?? 0, data.enterpriseValue ?? 0)
   })
 
   const fitGrowth = (indicator: Exclude<GrowthIndicator, 'custom'>) => {
@@ -240,10 +240,10 @@ const StockCalculator = () => {
         </div>
         <div class='flex flex-wrap gap-4'>
           <div class='rounded-lg border border-primary bg-background px-3 py-2 font-mono text-background-fg'>
-            Currency: {YFData()?.currency || 'N/A'}
+            Currency: {YFData()?.currency ?? 'N/A'}
           </div>
           <div class='rounded-lg border border-primary bg-background px-3 py-2 font-mono text-background-fg'>
-            Share price: {YFData()?.sharePrice || NaN}
+            Share price: {YFData()?.sharePrice ?? NaN}
           </div>
           <button
             onClick={() => document.getElementById('value-rating')?.scrollIntoView()}
