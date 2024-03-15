@@ -31,13 +31,15 @@ const getTimeSeries = async (ticker: string) => {
   const period1 = Date.now() / 1000 - 6 * 365 * 24 * 60 * 60
   const period2 = Date.now() / 1000
   const types: FinancialStatementType[] = [
-    'annualTotalDebt',
-    'annualCashAndCashEquivalents',
     'annualTotalRevenue',
     'annualNetIncome',
     'annualCashDividendsPaid',
     'annualFreeCashFlow',
-  ] as const
+    'quarterlyOrdinarySharesNumber',
+    'quarterlyTotalDebt',
+    'quarterlyCashAndCashEquivalents',
+    'quarterlyOtherShortTermInvestments',
+  ]
 
   const url =
     `https://query2.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/${ticker}?` +
@@ -80,7 +82,7 @@ const getTimeSeries = async (ticker: string) => {
 }
 
 const getQuoteSummary = async (ticker: string) => {
-  const modules = ['financialData', 'quoteType', 'assetProfile', 'summaryDetail'] as const
+  const modules = ['financialData', 'quoteType', 'assetProfile'] as const
 
   const [cookie, crumb] = await getCookieAndCrumb()
   console.log(cookie, crumb)
@@ -111,7 +113,6 @@ const getQuoteSummary = async (ticker: string) => {
     industry: summaries['assetProfile']['industry'] as string,
     currency: summaries['financialData']['financialCurrency'] as string,
     sharePrice: summaries['financialData']['currentPrice'] as number,
-    marketCap: summaries['summaryDetail']['marketCap'] as number,
   }
 
   return parsed
@@ -135,11 +136,16 @@ export interface YFinanceData {
 export const getYFinanceData = async (ticker: string) => {
   'use server'
   const [timeSeries, quoteSummary] = await Promise.all([getTimeSeries(ticker), getQuoteSummary(ticker)])
-  const fiscalYearEnds = Object.keys(timeSeries).sort()
+  const dates = Object.keys(timeSeries).sort()
+  const fiscalYearEnds = dates.filter((date) => timeSeries[date].annualTotalRevenue !== undefined)
+  const recentQuarter = timeSeries[dates[dates.length - 1]]
 
-  const recentYearEnd = timeSeries[fiscalYearEnds[fiscalYearEnds.length - 1]]
+  const marketCap = quoteSummary.sharePrice * recentQuarter.quarterlyOrdinarySharesNumber!
   const enterpriseValue =
-    quoteSummary.marketCap + recentYearEnd.annualTotalDebt! - recentYearEnd.annualCashAndCashEquivalents!
+    marketCap +
+    (recentQuarter.quarterlyTotalDebt ?? 0) -
+    (recentQuarter.quarterlyCashAndCashEquivalents ?? 0) -
+    (recentQuarter.quarterlyOtherShortTermInvestments ?? 0)
 
   const revenues = fiscalYearEnds.map((year) => timeSeries[year].annualTotalRevenue ?? null)
   const earnings = fiscalYearEnds.map((year) => timeSeries[year].annualNetIncome ?? null)
@@ -154,6 +160,7 @@ export const getYFinanceData = async (ticker: string) => {
 
   const data: YFinanceData = {
     ...quoteSummary,
+    marketCap,
     enterpriseValue,
     fiscalYearEnds,
     revenues,
