@@ -139,7 +139,7 @@ export const getYFinanceData = async (ticker: string) => {
 
   const recentYearEnd = timeSeries[fiscalYearEnds[fiscalYearEnds.length - 1]]
   const enterpriseValue =
-    quoteSummary.marketCap + recentYearEnd.annualTotalDebt! + recentYearEnd.annualCashAndCashEquivalents!
+    quoteSummary.marketCap + recentYearEnd.annualTotalDebt! - recentYearEnd.annualCashAndCashEquivalents!
 
   const revenues = fiscalYearEnds.map((year) => timeSeries[year].annualTotalRevenue ?? null)
   const earnings = fiscalYearEnds.map((year) => timeSeries[year].annualNetIncome ?? null)
