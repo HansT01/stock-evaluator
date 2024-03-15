@@ -1,6 +1,6 @@
 import { Component, For, Show, createSignal } from 'solid-js'
-import { cn } from '~/util/cn'
-import { YFinanceData, YFinanceQuote, getYFinanceData, getYFinanceQuotes } from '~/util/yfinance'
+import { YFinanceData, YFinanceQuote, getYFinanceData, getYFinanceQuotes } from '../api/yfinance'
+import { cn } from '../utils/cn'
 import { LoaderIcon, SearchIcon } from './icons'
 
 interface SearchProps {

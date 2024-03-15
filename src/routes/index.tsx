@@ -1,10 +1,10 @@
 import { Chart } from 'chart.js/auto'
 import dayjs from 'dayjs'
 import { Component, Show, createEffect, createMemo, createSignal, onCleanup, onMount } from 'solid-js'
+import { YFinanceData } from '~/api/yfinance'
 import { YFinanceSearch } from '~/components/search'
-import { cn } from '~/util/cn'
-import { formatCamelCase, formatNum, formatPct } from '~/util/format'
-import { YFinanceData } from '~/util/yfinance'
+import { cn } from '~/utils/cn'
+import { formatCamelCase, formatNum, formatPct } from '~/utils/format'
 
 interface GrowthChartProps {
   label: string

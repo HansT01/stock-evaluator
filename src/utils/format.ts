@@ -1,4 +1,4 @@
-export const formatNum = (number?: number | null, significantFigures?: number): string => {
+export const formatNum = (number?: number | null, significantFigures?: number) => {
   if (number === undefined || number === null || Number.isNaN(number)) {
     return 'NaN'
   }
@@ -15,7 +15,7 @@ export const formatNum = (number?: number | null, significantFigures?: number): 
   return scaled.toFixed(decimalPlaces) + suffix
 }
 
-export const formatPct = (number?: number | null, noSign?: boolean): string => {
+export const formatPct = (number?: number | null, noSign?: boolean) => {
   if (number === undefined || number === null || Number.isNaN(number)) {
     return 'NaN'
   }
