@@ -23,7 +23,7 @@ export const fitExponential = (xData: number[], yData: (number | null)[]) => {
   const xLogYSum = xLogY.reduce((acc, val) => acc + val, 0)
   const slope = (x.length * xLogYSum - xSum * logYSum) / (x.length * xSqrSum - xSum ** 2)
   const base = Math.exp(slope)
-  const xMean = xSum / x.length
+  const xMean = xSum / x.length - x[0]
   const yMean = ySum / y.length
   const constant = yMean / base ** xMean
   return { constant, base }

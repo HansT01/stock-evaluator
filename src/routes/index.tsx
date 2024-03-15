@@ -181,7 +181,7 @@ const StockEvaluator = () => {
     }
     const yGrowth = []
     for (let x of xData) {
-      yGrowth.push(constant * base ** x)
+      yGrowth.push(constant * base ** (x - xData[0]))
     }
     const xDataStr = xData.map((x) => x.toString())
     return { label, xData: xDataStr, yData, yGrowth }
