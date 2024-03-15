@@ -33,26 +33,36 @@ export const YFinanceSearch: Component<SearchProps> = (props) => {
     handleSearch()
   }
 
-  let timeoutId: NodeJS.Timeout | null = null
-
-  const handleKeyUp = (e: KeyboardEvent & { currentTarget: HTMLInputElement }) => {
-    setQuotes([])
+  let iteration = 0
+  let timeout: NodeJS.Timeout | null = null
+  const handleInput = (e: InputEvent & { currentTarget: HTMLInputElement }) => {
     const query = e.currentTarget.value
     const handleGetQuotes = () => {
-      if (isFetchingQuotes()) {
-        return
-      }
+      iteration++
+      const current = iteration
       setIsFetchingQuotes(true)
       getYFinanceQuotes(query)
-        .then(setQuotes)
-        .catch(() => setQuotes([]))
-        .finally(() => setIsFetchingQuotes(false))
+        .then((quotes) => {
+          if (current === iteration) {
+            setQuotes(quotes)
+          }
+        })
+        .catch(() => {
+          if (current === iteration) {
+            setQuotes([])
+          }
+        })
+        .finally(() => {
+          if (current === iteration) {
+            setIsFetchingQuotes(false)
+          }
+        })
     }
-    if (timeoutId !== null) {
-      clearTimeout(timeoutId)
-      timeoutId = null
+    if (timeout !== null) {
+      clearTimeout(timeout)
+      timeout = null
     }
-    timeoutId = setTimeout(handleGetQuotes, 500)
+    timeout = setTimeout(handleGetQuotes, 200)
   }
 
   return (
@@ -79,7 +89,7 @@ export const YFinanceSearch: Component<SearchProps> = (props) => {
             setIsFocused(true)
           }}
           onChange={(e) => setTicker(e.target.value)}
-          onKeyUp={handleKeyUp}
+          onInput={handleInput}
           class='min-w-0 max-w-full grow rounded-s-full border border-primary bg-background px-4 py-2 text-background-fg'
         />
         <button
@@ -96,11 +106,11 @@ export const YFinanceSearch: Component<SearchProps> = (props) => {
           <Show
             when={quotes().length !== 0}
             fallback={
-              <Show when={isFetchingQuotes()}>
-                <div class='flex min-h-[68px] items-center justify-center rounded-lg border border-primary bg-background text-background-fg'>
+              <div class='flex min-h-[68px] items-center justify-center rounded-lg border border-primary bg-background text-background-fg'>
+                <Show when={isFetchingQuotes()} fallback={<div>No matching results.</div>}>
                   <LoaderIcon class='animate-spin' />
-                </div>
-              </Show>
+                </Show>
+              </div>
             }
           >
             <div class='flex flex-col items-stretch divide-y divide-primary overflow-hidden rounded-lg border border-primary bg-background text-background-fg'>
