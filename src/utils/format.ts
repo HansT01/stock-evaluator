@@ -3,13 +3,13 @@ export const formatNum = (number?: number | null, significantFigures?: number) =
   if (Number.isNaN(number)) {
     return 'NaN'
   }
-  const sigFig = significantFigures !== undefined ? significantFigures : 4
-  const SI_SYMBOL = ['', 'k', 'M', 'B', 'T']
+  const sigFig = significantFigures ?? 4
+  const symbols = ['', 'k', 'M', 'B', 'T']
   const tier = (Math.log10(Math.abs(number)) / 3) | 0
   if (tier === 0) {
     return number.toString()
   }
-  const suffix = SI_SYMBOL[tier]
+  const suffix = symbols[tier]
   const scale = Math.pow(10, tier * 3)
   const scaled = number / scale
   const decimalPlaces = Math.max(0, sigFig - Math.floor(Math.abs(scaled)).toString().length)
