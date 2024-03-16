@@ -1,12 +1,12 @@
 import { FinancialStatementType } from './yfinance.types'
 
-const getCookie = async () => {
+export const getCookie = async () => {
   const res = await fetch('https://fc.yahoo.com')
   const cookie = res.headers.getSetCookie()[0]
   return cookie
 }
 
-const getCrumb = async (cookie: string) => {
+export const getCrumb = async (cookie: string) => {
   const res = await fetch('https://query2.finance.yahoo.com/v1/test/getcrumb', {
     headers: {
       'Cookie': cookie,
@@ -124,6 +124,7 @@ export interface YFinanceData {
 }
 
 export const getYFinanceData = async (ticker: string, cookie?: string, crumb?: string) => {
+  'use server'
   const [timeSeries, quoteSummary] = await Promise.all([getTimeSeries(ticker), getQuoteSummary(ticker, cookie, crumb)])
   const dates = Object.keys(timeSeries).sort()
   const fiscalYearEnds = dates.filter((date) => timeSeries[date].annualTotalRevenue !== undefined)
