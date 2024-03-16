@@ -29,6 +29,7 @@ export const GET = async (props: APIEvent) => {
     const intrinsicValue = calculateDCF(baseFCF, discountRate, growingYears, projectedGrowth, terminalGrowth)
     const valueRating = intrinsicValue / data.enterpriseValue
     return {
+      ticker: data.ticker,
       currency: data.currency,
       sharePrice: data.sharePrice,
       marketCap: data.marketCap,
@@ -37,13 +38,12 @@ export const GET = async (props: APIEvent) => {
     }
   }
 
+  const res: Awaited<ReturnType<typeof getValueRating>>[] = []
   const results = await Promise.allSettled(tickers.map((ticker) => getValueRating(ticker)))
-
-  const valueRatings: { [ticker: string]: Awaited<ReturnType<typeof getValueRating>> } = {}
-  results.forEach((result, i) => {
+  results.forEach((result) => {
     if (result.status === 'fulfilled') {
-      valueRatings[tickers[i]] = result.value
+      res.push(result.value)
     }
   })
-  return valueRatings
+  return res
 }

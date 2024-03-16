@@ -58,7 +58,6 @@ const getTimeSeries = async (ticker: string) => {
     }>
   }
   const parsed: ParsedData = {}
-
   for (let result of raw.timeseries.result) {
     for (let key in result) {
       if (key === 'meta' || key === 'timestamp') {
@@ -74,7 +73,6 @@ const getTimeSeries = async (ticker: string) => {
       }
     }
   }
-
   return parsed
 }
 
@@ -102,17 +100,18 @@ const getQuoteSummary = async (ticker: string, cookie?: string, crumb?: string) 
 
   const summaries: { [module in (typeof modules)[number]]: any } = raw.quoteSummary.result[0]
   const parsed = {
+    ticker: summaries['quoteType']['symbol'] as string,
     name: summaries['quoteType']['longName'] as string,
     summary: summaries['assetProfile']['longBusinessSummary'] as string,
     industry: summaries['assetProfile']['industry'] as string,
     currency: summaries['summaryDetail']['currency'] as string,
     sharePrice: summaries['financialData']['currentPrice'] as number,
   }
-
   return parsed
 }
 
 export interface YFinanceData {
+  ticker: string
   name: string
   summary: string
   industry: string
