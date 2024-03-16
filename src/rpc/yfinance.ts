@@ -29,6 +29,10 @@ const getTimeSeries = async (ticker: string) => {
     'annualNetIncome',
     'annualCashDividendsPaid',
     'annualFreeCashFlow',
+    'annualOrdinarySharesNumber',
+    'annualTotalDebt',
+    'annualCashAndCashEquivalents',
+    'annualOtherShortTermInvestments',
     'quarterlyOrdinarySharesNumber',
     'quarterlyTotalDebt',
     'quarterlyCashAndCashEquivalents',
@@ -128,14 +132,17 @@ export const getYFinanceData = async (ticker: string, cookie?: string, crumb?: s
   const [timeSeries, quoteSummary] = await Promise.all([getTimeSeries(ticker), getQuoteSummary(ticker, cookie, crumb)])
   const dates = Object.keys(timeSeries).sort()
   const fiscalYearEnds = dates.filter((date) => timeSeries[date].annualTotalRevenue !== undefined)
-  const recentQuarter = timeSeries[dates[dates.length - 1]]
 
-  const marketCap = quoteSummary.sharePrice * recentQuarter.quarterlyOrdinarySharesNumber!
+  const recentQuarter = timeSeries[dates[dates.length - 1]]
+  const recentYearEnd = timeSeries[fiscalYearEnds[fiscalYearEnds.length - 1]]
+  const marketCap =
+    quoteSummary.sharePrice *
+    (recentQuarter.quarterlyOrdinarySharesNumber ?? recentYearEnd.annualOrdinarySharesNumber ?? NaN)
   const enterpriseValue =
     marketCap +
-    (recentQuarter.quarterlyTotalDebt ?? 0) -
-    (recentQuarter.quarterlyCashAndCashEquivalents ?? 0) -
-    (recentQuarter.quarterlyOtherShortTermInvestments ?? 0)
+    (recentQuarter.quarterlyTotalDebt ?? recentYearEnd.annualTotalDebt ?? 0) -
+    (recentQuarter.quarterlyCashAndCashEquivalents ?? recentYearEnd.annualCashAndCashEquivalents ?? 0) -
+    (recentQuarter.quarterlyOtherShortTermInvestments ?? recentYearEnd.annualOtherShortTermInvestments ?? 0)
 
   const revenues = fiscalYearEnds.map((year) => timeSeries[year].annualTotalRevenue ?? null)
   const earnings = fiscalYearEnds.map((year) => timeSeries[year].annualNetIncome ?? null)
