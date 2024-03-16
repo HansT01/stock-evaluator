@@ -1,5 +1,5 @@
 import { Component, For, Show, createSignal } from 'solid-js'
-import { YFinanceData, YFinanceQuote, getYFinanceData, getYFinanceQuotes } from '../api/yfinance'
+import { YFinanceData, YFinanceQuote, getYFinanceData, getYFinanceQuotes } from '~/rpc/yfinance'
 import { cn } from '../utils/cn'
 import { LoaderIcon, SearchIcon } from './icons'
 
