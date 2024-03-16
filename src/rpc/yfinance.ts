@@ -79,7 +79,7 @@ const getTimeSeries = async (ticker: string) => {
 }
 
 const getQuoteSummary = async (ticker: string, cookie?: string, crumb?: string) => {
-  const modules = ['financialData', 'quoteType', 'assetProfile'] as const
+  const modules = ['financialData', 'quoteType', 'defaultKeyStatistics', 'assetProfile', 'summaryDetail'] as const
 
   cookie ??= await getCookie()
   crumb ??= await getCrumb(cookie)
@@ -105,7 +105,7 @@ const getQuoteSummary = async (ticker: string, cookie?: string, crumb?: string) 
     name: summaries['quoteType']['longName'] as string,
     summary: summaries['assetProfile']['longBusinessSummary'] as string,
     industry: summaries['assetProfile']['industry'] as string,
-    currency: summaries['financialData']['financialCurrency'] as string,
+    currency: summaries['summaryDetail']['currency'] as string,
     sharePrice: summaries['financialData']['currentPrice'] as number,
   }
 
