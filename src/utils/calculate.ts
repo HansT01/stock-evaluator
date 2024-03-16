@@ -28,3 +28,14 @@ export const fitExponential = (xData: number[], yData: (number | null)[]) => {
   const constant = yMean / base ** xMean
   return { constant, base }
 }
+
+export const calculateDCF = (baseCF: number, dr: number, growingYears: number, projGr: number, termGr: number) => {
+  const nthCF = baseCF * (1 + projGr) ** growingYears
+  const TV = nthCF / (dr - termGr)
+  let totalDCF = 0
+  for (let year = 1; year <= growingYears; year++) {
+    totalDCF += (baseCF * (1 + projGr) ** year) / (1 + dr) ** year
+  }
+  totalDCF += TV / (1 + dr) ** growingYears
+  return totalDCF
+}

@@ -3,9 +3,9 @@ import dayjs from 'dayjs'
 import { Component, Show, createEffect, createMemo, createSignal, onCleanup, onMount } from 'solid-js'
 import { YFinanceData } from '~/api/yfinance'
 import { YFinanceSearch } from '~/components/search'
+import { calculateDCF, fitExponential } from '~/utils/calculate'
 import { cn } from '~/utils/cn'
 import { formatCamelCase, formatNum, formatPct } from '~/utils/format'
-import { fitExponential } from '~/utils/math'
 
 interface GrowthChartProps {
   label: string
@@ -137,22 +137,14 @@ const StockEvaluator = () => {
     if (data === null) {
       return NaN
     }
-    const r = parameters().discountRate
-    const n = parameters().growingYears
-    const gT = parameters().terminalGrowth
-    const gP = projectedGrowth()
-    const FCF0 =
+    const baseFCF =
       data.freeCashFlows.reduce<number>((acc, val) => (val !== null ? acc + val : acc), 0) /
       data.freeCashFlows.filter((val) => val !== null).length
-    const FCFn = FCF0 * (1 + gP) ** n
-    const TV = FCFn / (r - gT)
-
-    let totalDiscountedFCF = 0
-    for (let year = 1; year <= n; year++) {
-      totalDiscountedFCF += (FCF0 * (1 + gP) ** year) / (1 + r) ** year
-    }
-    totalDiscountedFCF += TV / (1 + r) ** n
-    return totalDiscountedFCF
+    const dr = parameters().discountRate
+    const growingYears = parameters().growingYears
+    const projGr = projectedGrowth()
+    const termGr = parameters().terminalGrowth
+    return calculateDCF(baseFCF, dr, growingYears, projGr, termGr)
   })
 
   const investment = createMemo(() => {
