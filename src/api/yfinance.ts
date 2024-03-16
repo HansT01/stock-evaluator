@@ -44,7 +44,6 @@ const getTimeSeries = async (ticker: string) => {
   const url =
     `https://query2.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/${ticker}?` +
     new URLSearchParams({
-      'symbol': ticker,
       'type': types.join(','),
       'period1': Math.floor(period1).toString(),
       'period2': Math.floor(period2).toString(),
@@ -85,17 +84,13 @@ const getQuoteSummary = async (ticker: string) => {
   const modules = ['financialData', 'quoteType', 'assetProfile'] as const
 
   const [cookie, crumb] = await getCookieAndCrumb()
-  console.log(cookie, crumb)
   const url =
     `https://query2.finance.yahoo.com/v10/finance/quoteSummary/${ticker}?` +
     new URLSearchParams({
-      'symbol': ticker,
       'modules': modules.join(','),
-      'corsDomain': 'finance.yahoo.com',
       'formatted': 'false',
       'crumb': crumb,
     })
-  console.log(url)
   const res = await fetch(url, {
     headers: {
       'Cookie': cookie,
