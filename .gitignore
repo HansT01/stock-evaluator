@@ -24,6 +24,6 @@ netlify
 # Temp
 gitignore
 
-# System Files
+# System files
 .DS_Store
 Thumbs.db
