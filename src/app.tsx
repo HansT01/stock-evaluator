@@ -2,10 +2,13 @@ import { Router } from '@solidjs/router'
 import { FileRoutes } from '@solidjs/start/router'
 import { Suspense } from 'solid-js'
 import './app.css'
+import { cn } from './utils/cn'
+
+const themes = ['slate', 'chocolate', 'orchid']
 
 export default function App() {
   return (
-    <div class='slate dark:dark bg-background text-background-fg'>
+    <div class={cn('dark:dark bg-background text-background-fg', themes[Math.floor(Math.random() * themes.length)])}>
       <Router root={(props) => <Suspense>{props.children}</Suspense>}>
         <FileRoutes />
       </Router>
