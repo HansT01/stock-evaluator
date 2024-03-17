@@ -50,7 +50,7 @@
   .orchid {
     --background: #fff9f3;
     --background-fg: #282433;
-    --accent: #e3e2e4;
+    --accent: #bdb4c6;
     --accent-fg: #282433;
     --primary: #282433;
     --primary-fg: #fff9f3;
@@ -65,7 +65,7 @@
     --accent-fg: #fff9f3;
     --primary: #fff9f3;
     --primary-fg: #282433;
-    --secondary: #a1a0a3;
+    --secondary: #95919c;
     --secondary-fg: #282433;
   }
 }
