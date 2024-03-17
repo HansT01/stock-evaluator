@@ -5,7 +5,7 @@ import './app.css'
 
 export default function App() {
   return (
-    <div class='dark:dark bg-background text-background-fg'>
+    <div class='slate dark:dark bg-background text-background-fg'>
       <Router root={(props) => <Suspense>{props.children}</Suspense>}>
         <FileRoutes />
       </Router>

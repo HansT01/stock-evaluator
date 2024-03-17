@@ -60,17 +60,17 @@ const GrowthChart: Component<GrowthChartProps> = (props) => {
     })
 
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      chart.options.color = '#fff3e4'
-      chart.options.scales!.x!.ticks!.color = '#fff3e4'
-      chart.options.scales!.y!.ticks!.color = '#fff3e4'
-      chart.options.scales!.x!.grid!.color = '#d3baa6'
-      chart.options.scales!.y!.grid!.color = '#d3baa6'
+      chart.options.color = '#ddd'
+      chart.options.scales!.x!.ticks!.color = '#ddd'
+      chart.options.scales!.y!.ticks!.color = '#ddd'
+      chart.options.scales!.x!.grid!.color = '#aaa'
+      chart.options.scales!.y!.grid!.color = '#aaa'
     } else {
-      chart.options.color = '#342828'
-      chart.options.scales!.x!.ticks!.color = '#342828'
-      chart.options.scales!.y!.ticks!.color = '#342828'
-      chart.options.scales!.x!.grid!.color = '#5c4545'
-      chart.options.scales!.y!.grid!.color = '#5c4545'
+      chart.options.color = '#222'
+      chart.options.scales!.x!.ticks!.color = '#222'
+      chart.options.scales!.y!.ticks!.color = '#222'
+      chart.options.scales!.x!.grid!.color = '#888'
+      chart.options.scales!.y!.grid!.color = '#888'
     }
 
     onCleanup(() => {

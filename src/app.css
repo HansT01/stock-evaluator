@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  .chocolate {
     --background: #fff3e4;
     --background-fg: #342828;
     --accent: #d3baa6;
@@ -14,7 +14,7 @@
     --secondary-fg: #fff3e4;
   }
 
-  .dark {
+  .chocolate.dark {
     --background: #342828;
     --background-fg: #fff3e4;
     --accent: #5c4545;
@@ -23,5 +23,49 @@
     --primary-fg: #342828;
     --secondary: #d3baa6;
     --secondary-fg: #342828;
+  }
+
+  .slate {
+    --background: #eeeeee;
+    --background-fg: #222831;
+    --accent: #a4afaf;
+    --accent-fg: #222831;
+    --primary: #222831;
+    --primary-fg: #eeeeee;
+    --secondary: #629092;
+    --secondary-fg: #eeeeee;
+  }
+
+  .slate.dark {
+    --background: #222831;
+    --background-fg: #eeeeee;
+    --accent: #31363f;
+    --accent-fg: #eeeeee;
+    --primary: #eeeeee;
+    --primary-fg: #222831;
+    --secondary: #76abae;
+    --secondary-fg: #222831;
+  }
+
+  .orchid {
+    --background: #fff9f3;
+    --background-fg: #282433;
+    --accent: #e3e2e4;
+    --accent-fg: #282433;
+    --primary: #282433;
+    --primary-fg: #fff9f3;
+    --secondary: #615c79;
+    --secondary-fg: #fff9f3;
+  }
+
+  .orchid.dark {
+    --background: #28262e;
+    --background-fg: #fff9f3;
+    --accent: #464350;
+    --accent-fg: #fff9f3;
+    --primary: #fff9f3;
+    --primary-fg: #282433;
+    --secondary: #a1a0a3;
+    --secondary-fg: #282433;
   }
 }
