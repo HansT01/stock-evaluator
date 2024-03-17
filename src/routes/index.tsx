@@ -1,7 +1,7 @@
 import { Chart } from 'chart.js/auto'
 import dayjs from 'dayjs'
 import { Component, Show, createEffect, createMemo, createSignal, onCleanup, onMount } from 'solid-js'
-import { getCookie, getEvent } from 'vinxi/http'
+import { getRequestEvent } from 'solid-js/web'
 import { YFinanceSearch } from '~/components/search'
 import { calculateDCF, fitExponential } from '~/utils/calculate'
 import { cn } from '~/utils/cn'
@@ -99,19 +99,52 @@ interface Parameters {
   includeDividends: boolean
 }
 
+const defaultParameters: Parameters = {
+  discountRate: 0.1,
+  growingYears: 10,
+  terminalGrowth: 0,
+  customGrowth: 0,
+  growthIndicator: 'revenues',
+  investmentOption: 'enterpriseValue',
+  includeDividends: true,
+}
+
+const getParameters = (): Parameters => {
+  const event = getRequestEvent()
+  if (event === undefined) {
+    return defaultParameters
+  }
+  const extractCookies = (headers: Headers) => {
+    const cookie = headers.get('Cookie')
+    if (cookie === null) {
+      return {}
+    }
+    return cookie
+      .split('; ')
+      .map((c) => c.split('=', 2))
+      .reduce<Record<string, any>>((acc, [name, value]) => {
+        acc[decodeURIComponent(name)] = JSON.parse(decodeURIComponent(value))
+        return acc
+      }, {})
+  }
+  const cookieParams: Parameters | undefined = extractCookies(event.request.headers)['parameters']
+  if (cookieParams === undefined) {
+    return defaultParameters
+  }
+  return { ...defaultParameters, ...cookieParams }
+}
+
 const StockEvaluator = () => {
   const [YFData, setYFData] = createSignal<YFinanceData | null>(null)
   const [isReadMore, setIsReadMore] = createSignal(false)
+  const [parameters, setParameters] = createSignal<Parameters>(getParameters())
 
-  const event = getEvent()
-  const [parameters, setParameters] = createSignal<Parameters>({
-    discountRate: parseFloat(getCookie(event, 'discountRate') ?? '0.1'),
-    growingYears: parseFloat(getCookie(event, 'growingYears') ?? '10'),
-    terminalGrowth: parseFloat(getCookie(event, 'terminalGrowth') ?? '0'),
-    customGrowth: parseFloat(getCookie(event, 'customGrowth') ?? '0'),
-    growthIndicator: (getCookie(event, 'growthIndicator') as any) ?? 'revenues',
-    investmentOption: (getCookie(event, 'investmentOption') as any) ?? 'enterpriseValue',
-    includeDividends: (getCookie(event, 'includeDividends') ?? 'true') === 'true',
+  createEffect(() => {
+    const setCookie = (name: string, value: any) => {
+      const cookieValue = encodeURIComponent(JSON.stringify(value))
+      document.cookie = `${name}=${cookieValue}; Max-Age=31536000; Path=/; SameSite=Strict`
+    }
+    setCookie('parameters', parameters())
   })
 
   const dividendYield = createMemo(() => {
