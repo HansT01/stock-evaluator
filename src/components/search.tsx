@@ -118,7 +118,7 @@ export const YFinanceSearch: Component<SearchProps> = (props) => {
                 {(quote) => (
                   <button
                     onClick={() => handleSelectQuote(quote)}
-                    class='flex flex-col items-stretch px-3 py-2 text-left hover:bg-accent hover:text-accent-fg focus:bg-accent focus:text-accent-fg'
+                    class='flex flex-col items-stretch px-3 py-2 text-left hover:bg-secondary hover:text-secondary-fg focus:bg-secondary focus:text-secondary-fg'
                   >
                     <div class='line-clamp-1 text-lg font-light'>{quote.longname}</div>
                     <div class='flex flex-wrap'>
