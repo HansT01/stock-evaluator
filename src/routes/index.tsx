@@ -128,9 +128,6 @@ const getParameters = (): Parameters => {
       }, {})
   }
   const cookieParams: Parameters | undefined = extractCookies(event.request.headers)['parameters']
-  if (cookieParams === undefined) {
-    return defaultParameters
-  }
   return { ...defaultParameters, ...cookieParams }
 }
 
