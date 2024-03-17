@@ -219,7 +219,7 @@ const StockEvaluator = () => {
     }
     const label = `Historical ${formatCamelCase(indicator)}`
     const xData = data.fiscalYearEnds.map((date) => dayjs(date).year())
-    const yData = data[indicator]
+    const yData = [...data[indicator]]
     const { constant, base } = fitExponential(xData, yData)
     for (let i = 0; i < parameters().growingYears; i++) {
       xData.push(xData[xData.length - 1] + 1)
