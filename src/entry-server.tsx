@@ -8,7 +8,10 @@ export default createHandler(() => (
         <head>
           <meta charset='utf-8' />
           <meta name='viewport' content='width=device-width, initial-scale=1' />
-          <meta name='description' content="Quickly evaluate a stock's intrinsic value against its market price." />
+          <meta
+            name='description'
+            content="Quickly evaluate a stock's intrinsic value based solely on its financials, against its market price."
+          />
           <title>Stock Evaluator</title>
           <link rel='icon' href='/favicon.ico' />
           <link rel='preconnect' href='https://fonts.googleapis.com' />
