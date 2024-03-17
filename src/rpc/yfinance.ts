@@ -1,12 +1,12 @@
 import { FinancialStatementType } from './yfinance.types'
 
-export const getCookie = async () => {
+export const fetchYFinanceCookie = async () => {
   const res = await fetch('https://fc.yahoo.com')
   const cookie = res.headers.getSetCookie()[0]
   return cookie
 }
 
-export const getCrumb = async (cookie: string) => {
+export const fetchYFinanceCrumb = async (cookie: string) => {
   const res = await fetch('https://query2.finance.yahoo.com/v1/test/getcrumb', {
     headers: {
       'Cookie': cookie,
@@ -21,7 +21,7 @@ export const getCrumb = async (cookie: string) => {
   return crumb
 }
 
-const getTimeSeries = async (ticker: string) => {
+const fetchTimeSeries = async (ticker: string) => {
   const period1 = Date.now() / 1000 - 6 * 365 * 24 * 60 * 60
   const period2 = Date.now() / 1000
   const types: FinancialStatementType[] = [
@@ -76,11 +76,11 @@ const getTimeSeries = async (ticker: string) => {
   return parsed
 }
 
-const getQuoteSummary = async (ticker: string, cookie?: string, crumb?: string) => {
+const fetchQuoteSummary = async (ticker: string, cookie?: string, crumb?: string) => {
   const modules = ['financialData', 'quoteType', 'defaultKeyStatistics', 'assetProfile', 'summaryDetail'] as const
 
-  cookie ??= await getCookie()
-  crumb ??= await getCrumb(cookie)
+  cookie ??= await fetchYFinanceCookie()
+  crumb ??= await fetchYFinanceCrumb(cookie)
   const url =
     `https://query2.finance.yahoo.com/v10/finance/quoteSummary/${ticker}?` +
     new URLSearchParams({
@@ -126,9 +126,12 @@ export interface YFinanceData {
   freeCashFlows: (number | null)[]
 }
 
-export const getYFinanceData = async (ticker: string, cookie?: string, crumb?: string) => {
+export const fetchYFinanceData = async (ticker: string, cookie?: string, crumb?: string) => {
   'use server'
-  const [timeSeries, quoteSummary] = await Promise.all([getTimeSeries(ticker), getQuoteSummary(ticker, cookie, crumb)])
+  const [timeSeries, quoteSummary] = await Promise.all([
+    fetchTimeSeries(ticker),
+    fetchQuoteSummary(ticker, cookie, crumb),
+  ])
   const dates = Object.keys(timeSeries).sort()
   const fiscalYearEnds = dates.filter((date) => timeSeries[date].annualTotalRevenue !== undefined)
 
@@ -178,7 +181,7 @@ export interface YFinanceQuote {
   quoteType: string
 }
 
-export const getYFinanceQuotes = async (query: string) => {
+export const fetchYFinanceQuotes = async (query: string) => {
   'use server'
   const url =
     'https://query2.finance.yahoo.com/v1/finance/search?' +

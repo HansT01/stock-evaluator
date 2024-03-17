@@ -1,5 +1,5 @@
 import { Component, For, Show, createSignal } from 'solid-js'
-import { YFinanceData, YFinanceQuote, getYFinanceData, getYFinanceQuotes } from '~/rpc/yfinance'
+import { YFinanceData, YFinanceQuote, fetchYFinanceData, fetchYFinanceQuotes } from '~/rpc/yfinance'
 import { cn } from '../utils/cn'
 import { LoaderIcon, SearchIcon } from './icons'
 
@@ -22,7 +22,7 @@ export const YFinanceSearch: Component<SearchProps> = (props) => {
     setQuotes([])
     setIsFetchingData(true)
     setIsFocused(false)
-    getYFinanceData(ticker())
+    fetchYFinanceData(ticker())
       .then(props.onSuccess)
       .catch(props.onError)
       .finally(() => setIsFetchingData(false))
@@ -41,7 +41,7 @@ export const YFinanceSearch: Component<SearchProps> = (props) => {
       iteration++
       const current = iteration
       setIsFetchingQuotes(true)
-      getYFinanceQuotes(query)
+      fetchYFinanceQuotes(query)
         .then((quotes) => {
           if (current === iteration) {
             setQuotes(quotes)

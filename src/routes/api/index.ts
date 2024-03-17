@@ -1,6 +1,6 @@
 import { APIEvent } from '@solidjs/start/server'
 import dayjs from 'dayjs'
-import { getCookie, getCrumb, getYFinanceData } from '~/rpc/yfinance'
+import { fetchYFinanceCookie, fetchYFinanceCrumb, fetchYFinanceData } from '~/rpc/yfinance'
 import { calculateDCF, fitExponential } from '~/utils/calculate'
 
 export const GET = async (props: APIEvent) => {
@@ -10,11 +10,11 @@ export const GET = async (props: APIEvent) => {
   const growingYears = parseFloat(params.get('growingYears') ?? '10')
   const terminalGrowth = parseFloat(params.get('terminalGrowth') ?? '0')
 
-  const cookie = await getCookie()
-  const crumb = await getCrumb(cookie)
+  const cookie = await fetchYFinanceCookie()
+  const crumb = await fetchYFinanceCrumb(cookie)
 
   const getValueRating = async (ticker: string) => {
-    const data = await getYFinanceData(ticker, cookie, crumb)
+    const data = await fetchYFinanceData(ticker, cookie, crumb)
     const baseFCF =
       data.freeCashFlows.reduce<number>((acc, val) => (val !== null ? acc + val : acc), 0) /
       data.freeCashFlows.filter((val) => val !== null).length
