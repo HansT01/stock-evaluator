@@ -109,32 +109,42 @@ const defaultParameters: Parameters = {
   includeDividends: true,
 }
 
+const parseCookies = (cookies: string) => {
+  if (cookies === '') {
+    return {}
+  }
+  return cookies
+    .split('; ')
+    .map((c) => c.split('=', 2))
+    .reduce<Record<string, any>>((acc, [name, value]) => {
+      acc[decodeURIComponent(name)] = JSON.parse(decodeURIComponent(value))
+      return acc
+    }, {})
+}
+
 const getParameters = (): Parameters => {
   const event = getRequestEvent()
   if (event === undefined) {
     return defaultParameters
   }
-  const extractCookies = (headers: Headers) => {
-    const cookie = headers.get('Cookie')
-    if (cookie === null) {
-      return {}
-    }
-    return cookie
-      .split('; ')
-      .map((c) => c.split('=', 2))
-      .reduce<Record<string, any>>((acc, [name, value]) => {
-        acc[decodeURIComponent(name)] = JSON.parse(decodeURIComponent(value))
-        return acc
-      }, {})
+  const cookies = event.request.headers.get('Cookie')
+  if (cookies === null) {
+    return defaultParameters
   }
-  const cookieParams: Parameters | undefined = extractCookies(event.request.headers)['parameters']
-  return { ...defaultParameters, ...cookieParams }
+  const params: Parameters | undefined = parseCookies(cookies)['parameters']
+  return { ...defaultParameters, ...params }
 }
 
 const StockEvaluator = () => {
   const [YFData, setYFData] = createSignal<YFinanceData | null>(null)
   const [isReadMore, setIsReadMore] = createSignal(false)
   const [parameters, setParameters] = createSignal<Parameters>(getParameters())
+
+  onMount(() => {
+    const cookies = document.cookie
+    const params: Parameters | undefined = parseCookies(cookies)['parameters']
+    setParameters({ ...parameters(), ...params })
+  })
 
   createEffect(() => {
     const setCookie = (name: string, value: any) => {
