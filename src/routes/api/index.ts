@@ -6,9 +6,9 @@ import { calculateDCF, fitExponential } from '~/utils/calculate'
 export const GET = async (props: APIEvent) => {
   const params = new URLSearchParams(props.request.url.split('?')[1])
   const tickers = (params.get('tickers') ?? '').split(',').filter((ticker) => ticker !== '')
-  const discountRate = parseFloat(params.get('discountRate') ?? '0.2')
-  const growingYears = parseFloat(params.get('growingYears') ?? '5')
-  const terminalGrowth = parseFloat(params.get('terminalGrowth') ?? '0.0')
+  const discountRate = parseFloat(params.get('discountRate') ?? '0.1')
+  const growingYears = parseFloat(params.get('growingYears') ?? '10')
+  const terminalGrowth = parseFloat(params.get('terminalGrowth') ?? '0')
 
   const cookie = await getCookie()
   const crumb = await getCrumb(cookie)
@@ -29,7 +29,7 @@ export const GET = async (props: APIEvent) => {
     const intrinsicValue = calculateDCF(baseFCF, discountRate, growingYears, projectedGrowth, terminalGrowth)
     const valueRating = intrinsicValue / data.enterpriseValue
     return {
-      ticker: data.ticker,
+      ticker: ticker,
       currency: data.currency,
       sharePrice: data.sharePrice,
       marketCap: data.marketCap,
@@ -38,12 +38,28 @@ export const GET = async (props: APIEvent) => {
     }
   }
 
-  const res: Awaited<ReturnType<typeof getValueRating>>[] = []
+  const fulfilled: Awaited<ReturnType<typeof getValueRating>>[] = []
+  const rejected: any[] = []
   const results = await Promise.allSettled(tickers.map((ticker) => getValueRating(ticker)))
-  results.forEach((result) => {
+  results.forEach((result, i) => {
     if (result.status === 'fulfilled') {
-      res.push(result.value)
+      fulfilled.push(result.value)
+    }
+    if (result.status === 'rejected') {
+      rejected.push({
+        ticker: tickers[i],
+        message: result.reason.message,
+      })
     }
   })
-  return res
+
+  props.response.status = 200
+  const response = {
+    discountRate,
+    growingYears,
+    terminalGrowth,
+    fulfilled,
+    rejected,
+  }
+  return response
 }
