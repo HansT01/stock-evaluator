@@ -1,6 +1,7 @@
 import { Chart } from 'chart.js/auto'
 import dayjs from 'dayjs'
 import { Component, Show, createEffect, createMemo, createSignal, onCleanup, onMount } from 'solid-js'
+import { getCookie, getEvent } from 'vinxi/http'
 import { YFinanceSearch } from '~/components/search'
 import { calculateDCF, fitExponential } from '~/utils/calculate'
 import { cn } from '~/utils/cn'
@@ -88,22 +89,29 @@ const GrowthChart: Component<GrowthChartProps> = (props) => {
   return <canvas ref={(el) => (ref = el)} />
 }
 
-type GrowthIndicator = 'revenues' | 'earnings' | 'dividends' | 'freeCashFlows' | 'custom'
+interface Parameters {
+  discountRate: number
+  growingYears: number
+  terminalGrowth: number
+  customGrowth: number
+  growthIndicator: 'revenues' | 'earnings' | 'dividends' | 'freeCashFlows' | 'custom'
+  investmentOption: 'enterpriseValue' | 'marketCap'
+  includeDividends: boolean
+}
 
 const StockEvaluator = () => {
   const [YFData, setYFData] = createSignal<YFinanceData | null>(null)
   const [isReadMore, setIsReadMore] = createSignal(false)
 
-  const [parameters, setParameters] = createSignal({
-    discountRate: 0.2,
-    growingYears: 5,
-    terminalGrowth: 0,
-    customGrowth: 0,
-  })
-  const [growthIndicator, setGrowthIndicator] = createSignal<GrowthIndicator>('revenues')
-  const [investmentOption, setInvestmentOption] = createSignal<'marketCap' | 'enterpriseValue'>('enterpriseValue')
-  const [extraConsiderations, setExtraConsiderations] = createSignal({
-    includeDividends: true,
+  const event = getEvent()
+  const [parameters, setParameters] = createSignal<Parameters>({
+    discountRate: parseFloat(getCookie(event, 'discountRate') ?? '0.1'),
+    growingYears: parseFloat(getCookie(event, 'growingYears') ?? '10'),
+    terminalGrowth: parseFloat(getCookie(event, 'terminalGrowth') ?? '0'),
+    customGrowth: parseFloat(getCookie(event, 'customGrowth') ?? '0'),
+    growthIndicator: (getCookie(event, 'growthIndicator') as any) ?? 'revenues',
+    investmentOption: (getCookie(event, 'investmentOption') as any) ?? 'enterpriseValue',
+    includeDividends: (getCookie(event, 'includeDividends') ?? 'true') === 'true',
   })
 
   const dividendYield = createMemo(() => {
@@ -112,10 +120,10 @@ const StockEvaluator = () => {
       return NaN
     }
     const mean = data.dividends.reduce<number>((acc, val) => acc + (val ?? 0), 0) / data.dividends.length
-    return mean / data[investmentOption()]
+    return mean / data[parameters().investmentOption]
   })
 
-  const calculateGrowth = (indicator: GrowthIndicator) => {
+  const calculateGrowth = (indicator: Parameters['growthIndicator']) => {
     if (indicator === 'custom') {
       return parameters().customGrowth
     }
@@ -129,7 +137,7 @@ const StockEvaluator = () => {
   }
 
   const projectedGrowth = createMemo(() => {
-    return calculateGrowth(growthIndicator()) + (extraConsiderations().includeDividends ? dividendYield() : 0)
+    return calculateGrowth(parameters().growthIndicator) + (parameters().includeDividends ? dividendYield() : 0)
   })
 
   const intrinsicValue = createMemo(() => {
@@ -152,7 +160,7 @@ const StockEvaluator = () => {
     if (data === null) {
       return NaN
     }
-    return data[investmentOption()]
+    return data[parameters().investmentOption]
   })
 
   const valueRating = createMemo(() => {
@@ -165,7 +173,7 @@ const StockEvaluator = () => {
 
   const getChartProps = createMemo(() => {
     const data = YFData()
-    const indicator = growthIndicator()
+    const indicator = parameters().growthIndicator
     if (data === null || indicator === 'custom') {
       return null
     }
@@ -241,9 +249,9 @@ const StockEvaluator = () => {
                   <td class='w-[96px] border border-primary px-3 py-2'>{formatPct(calculateGrowth('revenues'))}</td>
                   <td class='relative w-[41px] border border-primary'>
                     <button
-                      onClick={() => setGrowthIndicator('revenues')}
+                      onClick={() => setParameters({ ...parameters(), growthIndicator: 'revenues' })}
                       class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
-                        'bg-primary': growthIndicator() === 'revenues',
+                        'bg-primary': parameters().growthIndicator === 'revenues',
                       })}
                     />
                   </td>
@@ -253,9 +261,9 @@ const StockEvaluator = () => {
                   <td class='border border-primary px-3 py-2'>{formatPct(calculateGrowth('earnings'))}</td>
                   <td class='relative w-[41px] border border-primary'>
                     <button
-                      onClick={() => setGrowthIndicator('earnings')}
+                      onClick={() => setParameters({ ...parameters(), growthIndicator: 'earnings' })}
                       class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
-                        'bg-primary': growthIndicator() === 'earnings',
+                        'bg-primary': parameters().growthIndicator === 'earnings',
                       })}
                     />
                   </td>
@@ -265,9 +273,9 @@ const StockEvaluator = () => {
                   <td class='border border-primary px-3 py-2'>{formatPct(calculateGrowth('dividends'))}</td>
                   <td class='relative w-[41px] border border-primary'>
                     <button
-                      onClick={() => setGrowthIndicator('dividends')}
+                      onClick={() => setParameters({ ...parameters(), growthIndicator: 'dividends' })}
                       class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
-                        'bg-primary': growthIndicator() === 'dividends',
+                        'bg-primary': parameters().growthIndicator === 'dividends',
                       })}
                     />
                   </td>
@@ -277,9 +285,9 @@ const StockEvaluator = () => {
                   <td class='border border-primary px-3 py-2'>{formatPct(calculateGrowth('freeCashFlows'))}</td>
                   <td class='relative w-[41px] border border-primary'>
                     <button
-                      onClick={() => setGrowthIndicator('freeCashFlows')}
+                      onClick={() => setParameters({ ...parameters(), growthIndicator: 'freeCashFlows' })}
                       class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
-                        'bg-primary': growthIndicator() === 'freeCashFlows',
+                        'bg-primary': parameters().growthIndicator === 'freeCashFlows',
                       })}
                     />
                   </td>
@@ -300,9 +308,9 @@ const StockEvaluator = () => {
                   </td>
                   <td class='relative w-[41px] border border-primary'>
                     <button
-                      onClick={() => setGrowthIndicator('custom')}
+                      onClick={() => setParameters({ ...parameters(), growthIndicator: 'custom' })}
                       class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
-                        'bg-primary': growthIndicator() === 'custom',
+                        'bg-primary': parameters().growthIndicator === 'custom',
                       })}
                     />
                   </td>
@@ -323,9 +331,9 @@ const StockEvaluator = () => {
                   <td class='w-[96px] border border-primary px-3 py-2'>{formatNum(YFData()?.enterpriseValue)}</td>
                   <td class='relative w-[41px] border border-primary'>
                     <button
-                      onClick={() => setInvestmentOption('enterpriseValue')}
+                      onClick={() => setParameters({ ...parameters(), investmentOption: 'enterpriseValue' })}
                       class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
-                        'bg-primary': investmentOption() === 'enterpriseValue',
+                        'bg-primary': parameters().investmentOption === 'enterpriseValue',
                       })}
                     />
                   </td>
@@ -335,9 +343,9 @@ const StockEvaluator = () => {
                   <td class='border border-primary px-3 py-2'>{formatNum(YFData()?.marketCap)}</td>
                   <td class='relative w-[41px] border border-primary'>
                     <button
-                      onClick={() => setInvestmentOption('marketCap')}
+                      onClick={() => setParameters({ ...parameters(), investmentOption: 'marketCap' })}
                       class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
-                        'bg-primary': investmentOption() === 'marketCap',
+                        'bg-primary': parameters().investmentOption === 'marketCap',
                       })}
                     />
                   </td>
@@ -359,13 +367,10 @@ const StockEvaluator = () => {
                   <td class='relative w-[41px] border border-primary'>
                     <button
                       onClick={() =>
-                        setExtraConsiderations({
-                          ...extraConsiderations(),
-                          includeDividends: !extraConsiderations().includeDividends,
-                        })
+                        setParameters({ ...parameters(), includeDividends: !parameters().includeDividends })
                       }
                       class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
-                        'bg-primary': extraConsiderations().includeDividends,
+                        'bg-primary': parameters().includeDividends,
                       })}
                     />
                   </td>
