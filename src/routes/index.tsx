@@ -99,9 +99,9 @@ interface Parameters {
   includeDividends: boolean
 }
 
-const defaultParameters: Parameters = {
+export const defaultParameters: Parameters = {
   discountRate: 0.1,
-  growingYears: 10,
+  growingYears: 4,
   terminalGrowth: 0,
   customGrowth: 0,
   growthIndicator: 'revenues',
