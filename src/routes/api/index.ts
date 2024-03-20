@@ -2,7 +2,7 @@ import { APIEvent } from '@solidjs/start/server'
 import dayjs from 'dayjs'
 import { fetchYFinanceCookie, fetchYFinanceCrumb, fetchYFinanceData } from '~/rpc/yfinance'
 import { calculateDCF, fitExponential } from '~/utils/calculate'
-import { defaultParameters } from '..'
+import { defaultParameters } from '~/utils/parameters'
 
 export const GET = async (props: APIEvent) => {
   const params = new URLSearchParams(props.request.url.split('?')[1])

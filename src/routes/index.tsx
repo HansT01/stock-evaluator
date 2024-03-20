@@ -3,10 +3,11 @@ import dayjs from 'dayjs'
 import { Component, Show, createEffect, createMemo, createSignal, onCleanup, onMount } from 'solid-js'
 import { getRequestEvent } from 'solid-js/web'
 import { YFinanceSearch } from '~/components/search'
+import { YFinanceData } from '~/rpc/yfinance'
 import { calculateDCF, fitExponential } from '~/utils/calculate'
 import { cn } from '~/utils/cn'
 import { formatCamelCase, formatNum, formatPct } from '~/utils/format'
-import { YFinanceData } from '../rpc/yfinance'
+import { Parameters, defaultParameters } from '~/utils/parameters'
 
 interface GrowthChartProps {
   label: string
@@ -87,26 +88,6 @@ const GrowthChart: Component<GrowthChartProps> = (props) => {
   })
 
   return <canvas ref={(el) => (ref = el)} />
-}
-
-interface Parameters {
-  discountRate: number
-  growingYears: number
-  terminalGrowth: number
-  customGrowth: number
-  growthIndicator: 'revenues' | 'earnings' | 'dividends' | 'freeCashFlows' | 'custom'
-  investmentOption: 'enterpriseValue' | 'marketCap'
-  includeDividends: boolean
-}
-
-export const defaultParameters: Parameters = {
-  discountRate: 0.1,
-  growingYears: 4,
-  terminalGrowth: 0,
-  customGrowth: 0,
-  growthIndicator: 'revenues',
-  investmentOption: 'enterpriseValue',
-  includeDividends: true,
 }
 
 const parseCookies = (cookies: string) => {

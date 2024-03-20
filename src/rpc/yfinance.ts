@@ -1,4 +1,4 @@
-import { FinancialStatementType } from './yfinance.types'
+import { FinancialStatementType } from './yfinance-statement-types'
 
 export const fetchYFinanceCookie = async () => {
   const res = await fetch('https://fc.yahoo.com')
