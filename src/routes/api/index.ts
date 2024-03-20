@@ -2,14 +2,13 @@ import { APIEvent } from '@solidjs/start/server'
 import dayjs from 'dayjs'
 import { fetchYFinanceCookie, fetchYFinanceCrumb, fetchYFinanceData } from '~/rpc/yfinance'
 import { calculateDCF, fitExponential } from '~/utils/calculate'
-import { defaultParameters } from '~/utils/parameters'
 
 export const GET = async (props: APIEvent) => {
   const params = new URLSearchParams(props.request.url.split('?')[1])
   const tickers = (params.get('tickers') ?? '').split(',').filter((ticker) => ticker !== '')
-  const discountRate = parseFloat(params.get('discountRate') ?? defaultParameters.discountRate.toString())
-  const growingYears = parseFloat(params.get('growingYears') ?? defaultParameters.growingYears.toString())
-  const terminalGrowth = parseFloat(params.get('terminalGrowth') ?? defaultParameters.terminalGrowth.toString())
+  const discountRate = parseFloat(params.get('discountRate') ?? '0.15')
+  const growingYears = parseFloat(params.get('growingYears') ?? '4')
+  const terminalGrowth = parseFloat(params.get('terminalGrowth') ?? '0.02')
 
   const cookie = await fetchYFinanceCookie()
   const crumb = await fetchYFinanceCrumb(cookie)

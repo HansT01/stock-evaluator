@@ -7,7 +7,6 @@ import { YFinanceData } from '~/rpc/yfinance'
 import { calculateDCF, fitExponential } from '~/utils/calculate'
 import { cn } from '~/utils/cn'
 import { formatCamelCase, formatNum, formatPct } from '~/utils/format'
-import { Parameters, defaultParameters } from '~/utils/parameters'
 
 interface GrowthChartProps {
   label: string
@@ -90,6 +89,26 @@ const GrowthChart: Component<GrowthChartProps> = (props) => {
   return <canvas ref={(el) => (ref = el)} />
 }
 
+interface EvaluatorParameters {
+  discountRate: number
+  growingYears: number
+  terminalGrowth: number
+  customGrowth: number
+  growthIndicator: 'revenues' | 'earnings' | 'dividends' | 'freeCashFlows' | 'custom'
+  investmentOption: 'enterpriseValue' | 'marketCap'
+  includeDividends: boolean
+}
+
+const defaultParameters: EvaluatorParameters = {
+  discountRate: 0.15,
+  growingYears: 4,
+  terminalGrowth: 0.02,
+  customGrowth: 0,
+  growthIndicator: 'revenues',
+  investmentOption: 'enterpriseValue',
+  includeDividends: true,
+}
+
 const parseCookies = (cookies: string) => {
   if (cookies === '') {
     return {}
@@ -103,7 +122,7 @@ const parseCookies = (cookies: string) => {
     }, {})
 }
 
-const getParameters = (): Parameters => {
+const getParameters = (): EvaluatorParameters => {
   const event = getRequestEvent()
   if (event === undefined) {
     return defaultParameters
@@ -112,18 +131,18 @@ const getParameters = (): Parameters => {
   if (cookies === null) {
     return defaultParameters
   }
-  const params: Parameters | undefined = parseCookies(cookies)['parameters']
+  const params: EvaluatorParameters | undefined = parseCookies(cookies)['parameters']
   return { ...defaultParameters, ...params }
 }
 
 const StockEvaluator = () => {
   const [YFData, setYFData] = createSignal<YFinanceData | null>(null)
   const [isReadMore, setIsReadMore] = createSignal(false)
-  const [parameters, setParameters] = createSignal<Parameters>(getParameters())
+  const [parameters, setParameters] = createSignal<EvaluatorParameters>(getParameters())
 
   onMount(() => {
     const cookies = document.cookie
-    const params: Parameters | undefined = parseCookies(cookies)['parameters']
+    const params: EvaluatorParameters | undefined = parseCookies(cookies)['parameters']
     setParameters({ ...parameters(), ...params })
   })
 
@@ -144,7 +163,7 @@ const StockEvaluator = () => {
     return mean / data[parameters().investmentOption]
   })
 
-  const calculateGrowth = (indicator: Parameters['growthIndicator']) => {
+  const calculateGrowth = (indicator: EvaluatorParameters['growthIndicator']) => {
     if (indicator === 'custom') {
       return parameters().customGrowth
     }
