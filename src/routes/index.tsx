@@ -246,7 +246,7 @@ const StockEvaluator = () => {
           </div>
           <button
             onClick={() => document.getElementById('value-rating')?.scrollIntoView()}
-            class='rounded-lg border border-primary bg-background px-3 py-2 font-mono text-background-fg'
+            class='rounded-lg border border-primary bg-primary px-3 py-2 font-mono text-primary-fg'
           >
             Value rating: {formatPct(valueRating(), true)}
           </button>
@@ -268,54 +268,66 @@ const StockEvaluator = () => {
                 <tr>
                   <td class='border border-primary px-3 py-2'>Revenues growth</td>
                   <td class='w-[96px] border border-primary px-3 py-2'>{formatPct(calculateGrowth('revenues'))}</td>
-                  <td class='relative w-[41px] border border-primary'>
+                  <td class='relative size-[41px] border border-primary'>
                     <button
                       onClick={() => setParameters({ ...parameters(), growthIndicator: 'revenues' })}
-                      class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
-                        'bg-primary': parameters().growthIndicator === 'revenues',
-                      })}
+                      class={cn(
+                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        {
+                          'bg-primary': parameters().growthIndicator === 'revenues',
+                        },
+                      )}
                     />
                   </td>
                 </tr>
                 <tr>
                   <td class='border border-primary px-3 py-2'>Earnings growth</td>
                   <td class='border border-primary px-3 py-2'>{formatPct(calculateGrowth('earnings'))}</td>
-                  <td class='relative w-[41px] border border-primary'>
+                  <td class='relative size-[41px] border border-primary'>
                     <button
                       onClick={() => setParameters({ ...parameters(), growthIndicator: 'earnings' })}
-                      class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
-                        'bg-primary': parameters().growthIndicator === 'earnings',
-                      })}
+                      class={cn(
+                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        {
+                          'bg-primary': parameters().growthIndicator === 'earnings',
+                        },
+                      )}
                     />
                   </td>
                 </tr>
                 <tr>
                   <td class='border border-primary px-3 py-2'>Dividends growth</td>
                   <td class='border border-primary px-3 py-2'>{formatPct(calculateGrowth('dividends'))}</td>
-                  <td class='relative w-[41px] border border-primary'>
+                  <td class='relative size-[41px] border border-primary'>
                     <button
                       onClick={() => setParameters({ ...parameters(), growthIndicator: 'dividends' })}
-                      class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
-                        'bg-primary': parameters().growthIndicator === 'dividends',
-                      })}
+                      class={cn(
+                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        {
+                          'bg-primary': parameters().growthIndicator === 'dividends',
+                        },
+                      )}
                     />
                   </td>
                 </tr>
                 <tr>
                   <td class='border border-primary px-3 py-2'>Cash flows growth</td>
                   <td class='border border-primary px-3 py-2'>{formatPct(calculateGrowth('freeCashFlows'))}</td>
-                  <td class='relative w-[41px] border border-primary'>
+                  <td class='relative size-[41px] border border-primary'>
                     <button
                       onClick={() => setParameters({ ...parameters(), growthIndicator: 'freeCashFlows' })}
-                      class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
-                        'bg-primary': parameters().growthIndicator === 'freeCashFlows',
-                      })}
+                      class={cn(
+                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        {
+                          'bg-primary': parameters().growthIndicator === 'freeCashFlows',
+                        },
+                      )}
                     />
                   </td>
                 </tr>
                 <tr>
                   <td class='border border-primary px-3 py-2'>Custom growth</td>
-                  <td class='border border-primary px-3 py-2'>
+                  <td class='border border-primary bg-secondary px-3 py-2 text-secondary-fg'>
                     <input
                       type='text'
                       autocomplete='none'
@@ -324,15 +336,18 @@ const StockEvaluator = () => {
                       onFocusOut={(e) =>
                         setParameters({ ...parameters(), customGrowth: parseFloat(e.target.value) / 100 })
                       }
-                      class='h-full w-full min-w-0 border-0 bg-background text-background-fg'
+                      class='h-full w-full min-w-0 border-0 bg-secondary text-secondary-fg'
                     />
                   </td>
-                  <td class='relative w-[41px] border border-primary'>
+                  <td class='relative size-[41px] border border-primary'>
                     <button
                       onClick={() => setParameters({ ...parameters(), growthIndicator: 'custom' })}
-                      class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
-                        'bg-primary': parameters().growthIndicator === 'custom',
-                      })}
+                      class={cn(
+                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        {
+                          'bg-primary': parameters().growthIndicator === 'custom',
+                        },
+                      )}
                     />
                   </td>
                 </tr>
@@ -350,24 +365,30 @@ const StockEvaluator = () => {
                 <tr>
                   <td class='border border-primary px-3 py-2'>Enterprise value</td>
                   <td class='w-[96px] border border-primary px-3 py-2'>{formatNum(YFData()?.enterpriseValue)}</td>
-                  <td class='relative w-[41px] border border-primary'>
+                  <td class='relative size-[41px] border border-primary'>
                     <button
                       onClick={() => setParameters({ ...parameters(), investmentOption: 'enterpriseValue' })}
-                      class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
-                        'bg-primary': parameters().investmentOption === 'enterpriseValue',
-                      })}
+                      class={cn(
+                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        {
+                          'bg-primary': parameters().investmentOption === 'enterpriseValue',
+                        },
+                      )}
                     />
                   </td>
                 </tr>
                 <tr>
                   <td class='border border-primary px-3 py-2'>Market capitalization</td>
                   <td class='border border-primary px-3 py-2'>{formatNum(YFData()?.marketCap)}</td>
-                  <td class='relative w-[41px] border border-primary'>
+                  <td class='relative size-[41px] border border-primary'>
                     <button
                       onClick={() => setParameters({ ...parameters(), investmentOption: 'marketCap' })}
-                      class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
-                        'bg-primary': parameters().investmentOption === 'marketCap',
-                      })}
+                      class={cn(
+                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        {
+                          'bg-primary': parameters().investmentOption === 'marketCap',
+                        },
+                      )}
                     />
                   </td>
                 </tr>
@@ -385,14 +406,17 @@ const StockEvaluator = () => {
                 <tr>
                   <td class='border border-primary px-3 py-2'>Dividend yield</td>
                   <td class='w-[96px] border border-primary px-3 py-2'>{formatPct(dividendYield())}</td>
-                  <td class='relative w-[41px] border border-primary'>
+                  <td class='relative size-[41px] border border-primary'>
                     <button
                       onClick={() =>
                         setParameters({ ...parameters(), includeDividends: !parameters().includeDividends })
                       }
-                      class={cn('absolute inset-0 h-full w-full hover:bg-secondary', {
-                        'bg-primary': parameters().includeDividends,
-                      })}
+                      class={cn(
+                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        {
+                          'bg-primary': parameters().includeDividends,
+                        },
+                      )}
                     />
                   </td>
                 </tr>
@@ -411,7 +435,7 @@ const StockEvaluator = () => {
               <tbody>
                 <tr>
                   <td class='border border-primary px-3 py-2'>Discount rate</td>
-                  <td class='w-[137px] border border-primary px-3 py-2'>
+                  <td class='w-[137px] border border-primary bg-secondary px-3 py-2 text-secondary-fg'>
                     <input
                       type='text'
                       autocomplete='none'
@@ -420,26 +444,26 @@ const StockEvaluator = () => {
                       onFocusOut={(e) =>
                         setParameters({ ...parameters(), discountRate: parseFloat(e.target.value) / 100 })
                       }
-                      class='h-full w-full min-w-0 border-0 bg-background text-background-fg'
+                      class='w-full min-w-0 bg-secondary text-secondary-fg'
                     />
                   </td>
                 </tr>
                 <tr>
                   <td class='border border-primary px-3 py-2'>Growing years</td>
-                  <td class='border border-primary px-3 py-2'>
+                  <td class='w-[137px] border border-primary bg-secondary px-3 py-2 text-secondary-fg'>
                     <input
                       type='text'
                       autocomplete='none'
                       value={parameters().growingYears}
                       onFocusIn={(e) => e.target.select()}
                       onFocusOut={(e) => setParameters({ ...parameters(), growingYears: parseFloat(e.target.value) })}
-                      class='w-full min-w-0 bg-background text-background-fg'
+                      class='w-full min-w-0 bg-secondary text-secondary-fg'
                     />
                   </td>
                 </tr>
                 <tr>
                   <td class='border border-primary px-3 py-2'>Terminal growth</td>
-                  <td class='border border-primary px-3 py-2'>
+                  <td class='w-[137px] border border-primary bg-secondary px-3 py-2 text-secondary-fg'>
                     <input
                       type='text'
                       autocomplete='none'
@@ -448,7 +472,7 @@ const StockEvaluator = () => {
                       onFocusOut={(e) =>
                         setParameters({ ...parameters(), terminalGrowth: parseFloat(e.target.value) / 100 })
                       }
-                      class='w-full min-w-0 bg-background text-background-fg'
+                      class='w-full min-w-0 bg-secondary text-secondary-fg'
                     />
                   </td>
                 </tr>
@@ -476,8 +500,10 @@ const StockEvaluator = () => {
                   <td class='border border-primary px-3 py-2'>{formatNum(investment())}</td>
                 </tr>
                 <tr id='value-rating'>
-                  <td class='border border-primary px-3 py-2'>Value rating</td>
-                  <td class='border border-primary px-3 py-2'>{formatPct(valueRating(), true)}</td>
+                  <td class='border border-primary bg-primary px-3 py-2 text-primary-fg'>Value rating</td>
+                  <td class='border border-primary bg-primary px-3 py-2 text-primary-fg'>
+                    {formatPct(valueRating(), true)}
+                  </td>
                 </tr>
               </tbody>
             </table>
