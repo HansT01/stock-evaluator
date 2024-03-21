@@ -153,7 +153,7 @@ export const fetchYFinanceData = async (ticker: string, cookie?: string, crumb?:
     if (dividends === undefined) {
       return null
     }
-    return -dividends
+    return Math.abs(dividends)
   })
   const freeCashFlows = fiscalYearEnds.map((year) => timeSeries[year].annualFreeCashFlow ?? null)
 
