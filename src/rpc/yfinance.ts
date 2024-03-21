@@ -201,5 +201,5 @@ export const fetchYFinanceQuotes = async (query: string) => {
   const raw = await res.json()
 
   const { quotes } = raw as { quotes: YFinanceQuote[] }
-  return quotes.filter((quote) => quote.quoteType === 'EQUITY').slice(0, 5)
+  return quotes.filter((quote) => quote.quoteType === 'EQUITY' && quote.industry !== undefined).slice(0, 5)
 }
