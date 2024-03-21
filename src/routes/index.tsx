@@ -237,9 +237,14 @@ const StockEvaluator = () => {
     <main class='container mx-auto flex min-h-svh max-w-screen-lg flex-col gap-8 bg-accent p-4 text-accent-fg sm:p-8'>
       <YFinanceSearch onSuccess={setYFData} onError={console.error} />
       <div class='flex flex-col gap-8'>
-        <div class='flex min-h-[96px] flex-col gap-2 px-3'>
+        <div class='flex min-h-[120px] flex-col px-3'>
           <div class='text-6xl font-thin'>{YFData()?.name}</div>
-          <div class='text-xl font-light'>{YFData()?.industry}</div>
+          <div class='mt-2 text-xl font-light'>{YFData()?.industry}</div>
+          <div class='font-semibold'>
+            <a href={YFData()?.website} target='_blank' class='underline hover:text-secondary'>
+              {YFData()?.website}
+            </a>
+          </div>
         </div>
         <div class='flex min-h-[122px] flex-col items-center gap-2 rounded-lg border border-primary bg-background px-3 py-2 text-background-fg'>
           <p
@@ -252,7 +257,7 @@ const StockEvaluator = () => {
           >
             {YFData()?.summary}
           </p>
-          <button onClick={() => setIsReadMore(!isReadMore())} class='underline hover:text-secondary'>
+          <button onClick={() => setIsReadMore(!isReadMore())} class='font-semibold underline hover:text-secondary'>
             {isReadMore() ? 'Read less' : 'Read more'}
           </button>
         </div>
