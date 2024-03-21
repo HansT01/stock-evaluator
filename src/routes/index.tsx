@@ -354,6 +354,7 @@ const StockEvaluator = () => {
                   <td class='border border-primary bg-secondary px-3 py-2 text-secondary-fg'>
                     <input
                       type='text'
+                      pattern='[0-9]+([\.,][0-9]+)?'
                       autocomplete='none'
                       value={formatPct(parameters().customGrowth)}
                       onFocusIn={(e) => e.target.select()}
@@ -462,6 +463,7 @@ const StockEvaluator = () => {
                   <td class='w-[137px] border border-primary bg-secondary px-3 py-2 text-secondary-fg'>
                     <input
                       type='text'
+                      pattern='[0-9]+([\.,][0-9]+)?'
                       autocomplete='none'
                       value={formatPct(parameters().discountRate, true)}
                       onFocusIn={(e) => e.target.select()}
@@ -477,6 +479,7 @@ const StockEvaluator = () => {
                   <td class='w-[137px] border border-primary bg-secondary px-3 py-2 text-secondary-fg'>
                     <input
                       type='text'
+                      pattern='[0-9]+([\.,][0-9]+)?'
                       autocomplete='none'
                       value={parameters().growingYears}
                       onFocusIn={(e) => e.target.select()}
@@ -490,6 +493,7 @@ const StockEvaluator = () => {
                   <td class='w-[137px] border border-primary bg-secondary px-3 py-2 text-secondary-fg'>
                     <input
                       type='text'
+                      pattern='[0-9]+([\.,][0-9]+)?'
                       autocomplete='none'
                       value={formatPct(parameters().terminalGrowth)}
                       onFocusIn={(e) => e.target.select()}
