@@ -10,7 +10,7 @@ import { formatCamelCase, formatNum, formatPct } from '~/utils/format'
 import { GrowthChart } from '../components/growth-chart'
 import { parseCookies } from '../utils/cookies'
 
-interface EvaluatorParameters {
+interface EvaluatorConfigs {
   discountRate: number
   growingYears: number
   terminalGrowth: number
@@ -20,7 +20,7 @@ interface EvaluatorParameters {
   includeDividends: boolean
 }
 
-const defaultParameters: EvaluatorParameters = {
+const defaultConfigs: EvaluatorConfigs = {
   discountRate: 0.15,
   growingYears: 4,
   terminalGrowth: 0.02,
@@ -30,28 +30,28 @@ const defaultParameters: EvaluatorParameters = {
   includeDividends: true,
 }
 
-const getParameters = (): EvaluatorParameters => {
+const getConfigs = (): EvaluatorConfigs => {
   const event = getRequestEvent()
   if (event === undefined) {
-    return defaultParameters
+    return defaultConfigs
   }
   const cookies = event.request.headers.get('Cookie')
   if (cookies === null) {
-    return defaultParameters
+    return defaultConfigs
   }
-  const params: EvaluatorParameters | undefined = parseCookies(cookies)['parameters']
-  return { ...defaultParameters, ...params }
+  const params: EvaluatorConfigs | undefined = parseCookies(cookies)['configs']
+  return { ...defaultConfigs, ...params }
 }
 
 const StockEvaluator = () => {
   const [YFData, setYFData] = createSignal<YFinanceData | null>(null)
   const [isReadMore, setIsReadMore] = createSignal(false)
-  const [parameters, setParameters] = createSignal<EvaluatorParameters>(getParameters())
+  const [configs, setConfigs] = createSignal<EvaluatorConfigs>(getConfigs())
 
   onMount(() => {
     const cookies = document.cookie
-    const params: EvaluatorParameters | undefined = parseCookies(cookies)['parameters']
-    setParameters({ ...parameters(), ...params })
+    const params: EvaluatorConfigs | undefined = parseCookies(cookies)['configs']
+    setConfigs({ ...configs(), ...params })
   })
 
   createEffect(() => {
@@ -59,7 +59,7 @@ const StockEvaluator = () => {
       const cookieValue = encodeURIComponent(JSON.stringify(value))
       document.cookie = `${name}=${cookieValue}; Max-Age=31536000; Path=/; SameSite=Strict`
     }
-    setCookie('parameters', parameters())
+    setCookie('configs', configs())
   })
 
   const dividendYield = createMemo(() => {
@@ -68,12 +68,12 @@ const StockEvaluator = () => {
       return NaN
     }
     const mean = data.dividends.reduce<number>((acc, val) => acc + (val ?? 0), 0) / data.dividends.length
-    return mean / data[parameters().investmentOption]
+    return mean / data[configs().investmentOption]
   })
 
-  const calculateGrowth = (indicator: EvaluatorParameters['growthIndicator']) => {
+  const calculateGrowth = (indicator: EvaluatorConfigs['growthIndicator']) => {
     if (indicator === 'custom') {
-      return parameters().customGrowth
+      return configs().customGrowth
     }
     const data = YFData()
     if (data === null) {
@@ -85,7 +85,7 @@ const StockEvaluator = () => {
   }
 
   const projectedGrowth = createMemo(() => {
-    return calculateGrowth(parameters().growthIndicator) + (parameters().includeDividends ? dividendYield() : 0)
+    return calculateGrowth(configs().growthIndicator) + (configs().includeDividends ? dividendYield() : 0)
   })
 
   const intrinsicValue = createMemo(() => {
@@ -96,10 +96,10 @@ const StockEvaluator = () => {
     const baseFCF =
       data.freeCashFlows.reduce<number>((acc, val) => (val !== null ? acc + val : acc), 0) /
       data.freeCashFlows.filter((val) => val !== null).length
-    const dr = parameters().discountRate
-    const growingYears = parameters().growingYears
+    const dr = configs().discountRate
+    const growingYears = configs().growingYears
     const projGr = projectedGrowth()
-    const termGr = parameters().terminalGrowth
+    const termGr = configs().terminalGrowth
     return calculateDCF(baseFCF, dr, growingYears, projGr, termGr)
   })
 
@@ -108,7 +108,7 @@ const StockEvaluator = () => {
     if (data === null) {
       return NaN
     }
-    return data[parameters().investmentOption]
+    return data[configs().investmentOption]
   })
 
   const valueRating = createMemo(() => {
@@ -121,7 +121,7 @@ const StockEvaluator = () => {
 
   const getChartProps = createMemo(() => {
     const data = YFData()
-    const indicator = parameters().growthIndicator
+    const indicator = configs().growthIndicator
     if (data === null || indicator === 'custom') {
       return null
     }
@@ -129,7 +129,7 @@ const StockEvaluator = () => {
     const xData = data.fiscalYearEnds.map((date) => dayjs(date).year())
     const yData = [...data[indicator]]
     const { constant, base } = fitExponential(xData, yData)
-    for (let i = 0; i < parameters().growingYears; i++) {
+    for (let i = 0; i < configs().growingYears; i++) {
       xData.push(xData[xData.length - 1] + 1)
       yData.push(null)
     }
@@ -200,11 +200,11 @@ const StockEvaluator = () => {
                   <TableCell class='w-[96px]'>{formatPct(calculateGrowth('revenues'))}</TableCell>
                   <TableCell class='relative w-[41px]'>
                     <button
-                      onClick={() => setParameters({ ...parameters(), growthIndicator: 'revenues' })}
+                      onClick={() => setConfigs({ ...configs(), growthIndicator: 'revenues' })}
                       class={cn(
                         'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
-                          'bg-primary': parameters().growthIndicator === 'revenues',
+                          'bg-primary': configs().growthIndicator === 'revenues',
                         },
                       )}
                     />
@@ -215,11 +215,11 @@ const StockEvaluator = () => {
                   <TableCell class='w-[96px]'>{formatPct(calculateGrowth('earnings'))}</TableCell>
                   <TableCell class='relative w-[41px]'>
                     <button
-                      onClick={() => setParameters({ ...parameters(), growthIndicator: 'earnings' })}
+                      onClick={() => setConfigs({ ...configs(), growthIndicator: 'earnings' })}
                       class={cn(
                         'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
-                          'bg-primary': parameters().growthIndicator === 'earnings',
+                          'bg-primary': configs().growthIndicator === 'earnings',
                         },
                       )}
                     />
@@ -230,11 +230,11 @@ const StockEvaluator = () => {
                   <TableCell class='w-[96px]'>{formatPct(calculateGrowth('dividends'))}</TableCell>
                   <TableCell class='relative w-[41px]'>
                     <button
-                      onClick={() => setParameters({ ...parameters(), growthIndicator: 'dividends' })}
+                      onClick={() => setConfigs({ ...configs(), growthIndicator: 'dividends' })}
                       class={cn(
                         'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
-                          'bg-primary': parameters().growthIndicator === 'dividends',
+                          'bg-primary': configs().growthIndicator === 'dividends',
                         },
                       )}
                     />
@@ -245,11 +245,11 @@ const StockEvaluator = () => {
                   <TableCell class='w-[96px]'>{formatPct(calculateGrowth('freeCashFlows'))}</TableCell>
                   <TableCell class='relative w-[41px]'>
                     <button
-                      onClick={() => setParameters({ ...parameters(), growthIndicator: 'freeCashFlows' })}
+                      onClick={() => setConfigs({ ...configs(), growthIndicator: 'freeCashFlows' })}
                       class={cn(
                         'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
-                          'bg-primary': parameters().growthIndicator === 'freeCashFlows',
+                          'bg-primary': configs().growthIndicator === 'freeCashFlows',
                         },
                       )}
                     />
@@ -262,21 +262,19 @@ const StockEvaluator = () => {
                       type='text'
                       pattern='[0-9]+([\.,][0-9]+)?'
                       autocomplete='none'
-                      value={formatPct(parameters().customGrowth)}
+                      value={formatPct(configs().customGrowth)}
                       onFocusIn={(e) => e.target.select()}
-                      onFocusOut={(e) =>
-                        setParameters({ ...parameters(), customGrowth: parseFloat(e.target.value) / 100 })
-                      }
+                      onFocusOut={(e) => setConfigs({ ...configs(), customGrowth: parseFloat(e.target.value) / 100 })}
                       class='h-full w-full min-w-0 border-0 bg-secondary text-secondary-fg'
                     />
                   </TableCell>
                   <TableCell class='relative w-[41px]'>
                     <button
-                      onClick={() => setParameters({ ...parameters(), growthIndicator: 'custom' })}
+                      onClick={() => setConfigs({ ...configs(), growthIndicator: 'custom' })}
                       class={cn(
                         'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
-                          'bg-primary': parameters().growthIndicator === 'custom',
+                          'bg-primary': configs().growthIndicator === 'custom',
                         },
                       )}
                     />
@@ -296,11 +294,11 @@ const StockEvaluator = () => {
                   <TableCell class='w-[96px]'>{formatNum(YFData()?.enterpriseValue)}</TableCell>
                   <TableCell class='relative w-[41px]'>
                     <button
-                      onClick={() => setParameters({ ...parameters(), investmentOption: 'enterpriseValue' })}
+                      onClick={() => setConfigs({ ...configs(), investmentOption: 'enterpriseValue' })}
                       class={cn(
                         'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
-                          'bg-primary': parameters().investmentOption === 'enterpriseValue',
+                          'bg-primary': configs().investmentOption === 'enterpriseValue',
                         },
                       )}
                     />
@@ -311,11 +309,11 @@ const StockEvaluator = () => {
                   <TableCell class='w-[96px]'>{formatNum(YFData()?.marketCap)}</TableCell>
                   <TableCell class='relative w-[41px]'>
                     <button
-                      onClick={() => setParameters({ ...parameters(), investmentOption: 'marketCap' })}
+                      onClick={() => setConfigs({ ...configs(), investmentOption: 'marketCap' })}
                       class={cn(
                         'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
-                          'bg-primary': parameters().investmentOption === 'marketCap',
+                          'bg-primary': configs().investmentOption === 'marketCap',
                         },
                       )}
                     />
@@ -335,13 +333,11 @@ const StockEvaluator = () => {
                   <TableCell class='w-[96px]'>{formatPct(dividendYield())}</TableCell>
                   <TableCell class='relative w-[41px]'>
                     <button
-                      onClick={() =>
-                        setParameters({ ...parameters(), includeDividends: !parameters().includeDividends })
-                      }
+                      onClick={() => setConfigs({ ...configs(), includeDividends: !configs().includeDividends })}
                       class={cn(
                         'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
-                          'bg-primary': parameters().includeDividends,
+                          'bg-primary': configs().includeDividends,
                         },
                       )}
                     />
@@ -365,11 +361,9 @@ const StockEvaluator = () => {
                       type='text'
                       pattern='[0-9]+([\.,][0-9]+)?'
                       autocomplete='none'
-                      value={formatPct(parameters().discountRate, true)}
+                      value={formatPct(configs().discountRate, true)}
                       onFocusIn={(e) => e.target.select()}
-                      onFocusOut={(e) =>
-                        setParameters({ ...parameters(), discountRate: parseFloat(e.target.value) / 100 })
-                      }
+                      onFocusOut={(e) => setConfigs({ ...configs(), discountRate: parseFloat(e.target.value) / 100 })}
                       class='w-full min-w-0 bg-secondary text-secondary-fg'
                     />
                   </TableCell>
@@ -381,9 +375,9 @@ const StockEvaluator = () => {
                       type='text'
                       pattern='[0-9]+([\.,][0-9]+)?'
                       autocomplete='none'
-                      value={parameters().growingYears}
+                      value={configs().growingYears}
                       onFocusIn={(e) => e.target.select()}
-                      onFocusOut={(e) => setParameters({ ...parameters(), growingYears: parseFloat(e.target.value) })}
+                      onFocusOut={(e) => setConfigs({ ...configs(), growingYears: parseFloat(e.target.value) })}
                       class='w-full min-w-0 bg-secondary text-secondary-fg'
                     />
                   </TableCell>
@@ -395,11 +389,9 @@ const StockEvaluator = () => {
                       type='text'
                       pattern='[0-9]+([\.,][0-9]+)?'
                       autocomplete='none'
-                      value={formatPct(parameters().terminalGrowth)}
+                      value={formatPct(configs().terminalGrowth)}
                       onFocusIn={(e) => e.target.select()}
-                      onFocusOut={(e) =>
-                        setParameters({ ...parameters(), terminalGrowth: parseFloat(e.target.value) / 100 })
-                      }
+                      onFocusOut={(e) => setConfigs({ ...configs(), terminalGrowth: parseFloat(e.target.value) / 100 })}
                       class='w-full min-w-0 bg-secondary text-secondary-fg'
                     />
                   </TableCell>
