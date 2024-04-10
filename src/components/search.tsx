@@ -90,6 +90,7 @@ export const YFinanceSearch: Component<SearchProps> = (props) => {
         class='relative flex w-full items-stretch'
       >
         <input
+          tabIndex={1}
           type='text'
           autocomplete='off'
           value={ticker()}
@@ -110,6 +111,7 @@ export const YFinanceSearch: Component<SearchProps> = (props) => {
           {isFetchingData() ? <LoaderIcon class='animate-spin' size={20} /> : <SearchIcon size={20} />}
         </button>
       </form>
+
       <Show when={isFocused()}>
         <div class='absolute left-0 right-0 mt-4 w-full'>
           <Show
@@ -126,6 +128,7 @@ export const YFinanceSearch: Component<SearchProps> = (props) => {
               <For each={quotes()}>
                 {(quote) => (
                   <button
+                    tabIndex={1}
                     onClick={() => handleSelectQuote(quote)}
                     class='flex flex-col items-stretch px-3 py-2 text-left hover:bg-secondary hover:text-secondary-fg focus:bg-secondary focus:text-secondary-fg'
                   >
