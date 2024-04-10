@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import { Show, createEffect, createMemo, createSignal, onMount } from 'solid-js'
 import { getRequestEvent } from 'solid-js/web'
 import { YFinanceSearch } from '~/components/search'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/table'
 import { YFinanceData } from '~/rpc/yfinance'
 import { calculateDCF, fitExponential } from '~/utils/calculate'
 import { cn } from '~/utils/cn'
@@ -187,19 +188,17 @@ const StockEvaluator = () => {
         </div>
         <div class='flex flex-col gap-8 md:flex-row'>
           <div class='flex basis-full flex-col gap-8'>
-            <table class='table-fixed rounded-lg border border-primary bg-background font-mono text-background-fg'>
-              <thead>
-                <tr>
-                  <td colSpan={3} class='border border-primary px-3 py-2 font-bold'>
-                    Growth estimates (Pick one)
-                  </td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class='border border-primary px-3 py-2'>Revenues growth</td>
-                  <td class='w-[96px] border border-primary px-3 py-2'>{formatPct(calculateGrowth('revenues'))}</td>
-                  <td class='relative size-[41px] border border-primary'>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead colSpan={3}>Growth estimates (Pick one)</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell>Revenues growth</TableCell>
+                  <TableCell class='w-[96px]'>{formatPct(calculateGrowth('revenues'))}</TableCell>
+                  <TableCell class='relative w-[41px]'>
                     <button
                       onClick={() => setParameters({ ...parameters(), growthIndicator: 'revenues' })}
                       class={cn(
@@ -209,12 +208,12 @@ const StockEvaluator = () => {
                         },
                       )}
                     />
-                  </td>
-                </tr>
-                <tr>
-                  <td class='border border-primary px-3 py-2'>Earnings growth</td>
-                  <td class='border border-primary px-3 py-2'>{formatPct(calculateGrowth('earnings'))}</td>
-                  <td class='relative size-[41px] border border-primary'>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Earnings growth</TableCell>
+                  <TableCell class='w-[96px]'>{formatPct(calculateGrowth('earnings'))}</TableCell>
+                  <TableCell class='relative w-[41px]'>
                     <button
                       onClick={() => setParameters({ ...parameters(), growthIndicator: 'earnings' })}
                       class={cn(
@@ -224,12 +223,12 @@ const StockEvaluator = () => {
                         },
                       )}
                     />
-                  </td>
-                </tr>
-                <tr>
-                  <td class='border border-primary px-3 py-2'>Dividends growth</td>
-                  <td class='border border-primary px-3 py-2'>{formatPct(calculateGrowth('dividends'))}</td>
-                  <td class='relative size-[41px] border border-primary'>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Dividends growth</TableCell>
+                  <TableCell class='w-[96px]'>{formatPct(calculateGrowth('dividends'))}</TableCell>
+                  <TableCell class='relative w-[41px]'>
                     <button
                       onClick={() => setParameters({ ...parameters(), growthIndicator: 'dividends' })}
                       class={cn(
@@ -239,12 +238,12 @@ const StockEvaluator = () => {
                         },
                       )}
                     />
-                  </td>
-                </tr>
-                <tr>
-                  <td class='border border-primary px-3 py-2'>Cash flows growth</td>
-                  <td class='border border-primary px-3 py-2'>{formatPct(calculateGrowth('freeCashFlows'))}</td>
-                  <td class='relative size-[41px] border border-primary'>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Cash flows growth</TableCell>
+                  <TableCell class='w-[96px]'>{formatPct(calculateGrowth('freeCashFlows'))}</TableCell>
+                  <TableCell class='relative w-[41px]'>
                     <button
                       onClick={() => setParameters({ ...parameters(), growthIndicator: 'freeCashFlows' })}
                       class={cn(
@@ -254,11 +253,11 @@ const StockEvaluator = () => {
                         },
                       )}
                     />
-                  </td>
-                </tr>
-                <tr>
-                  <td class='border border-primary px-3 py-2'>Custom growth</td>
-                  <td class='border border-primary bg-secondary px-3 py-2 text-secondary-fg'>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Custom growth</TableCell>
+                  <TableCell class='w-[96px] bg-secondary text-secondary-fg'>
                     <input
                       type='text'
                       pattern='[0-9]+([\.,][0-9]+)?'
@@ -270,8 +269,8 @@ const StockEvaluator = () => {
                       }
                       class='h-full w-full min-w-0 border-0 bg-secondary text-secondary-fg'
                     />
-                  </td>
-                  <td class='relative size-[41px] border border-primary'>
+                  </TableCell>
+                  <TableCell class='relative w-[41px]'>
                     <button
                       onClick={() => setParameters({ ...parameters(), growthIndicator: 'custom' })}
                       class={cn(
@@ -281,23 +280,21 @@ const StockEvaluator = () => {
                         },
                       )}
                     />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <table class='table-fixed bg-background font-mono text-background-fg'>
-              <thead>
-                <tr>
-                  <td colSpan={3} class='border border-primary px-3 py-2 font-bold'>
-                    Investment (Pick one)
-                  </td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class='border border-primary px-3 py-2'>Enterprise value</td>
-                  <td class='w-[96px] border border-primary px-3 py-2'>{formatNum(YFData()?.enterpriseValue)}</td>
-                  <td class='relative size-[41px] border border-primary'>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead colSpan={3}>Investment (Pick one)</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell>Enterprise value</TableCell>
+                  <TableCell class='w-[96px]'>{formatNum(YFData()?.enterpriseValue)}</TableCell>
+                  <TableCell class='relative w-[41px]'>
                     <button
                       onClick={() => setParameters({ ...parameters(), investmentOption: 'enterpriseValue' })}
                       class={cn(
@@ -307,12 +304,12 @@ const StockEvaluator = () => {
                         },
                       )}
                     />
-                  </td>
-                </tr>
-                <tr>
-                  <td class='border border-primary px-3 py-2'>Market capitalization</td>
-                  <td class='border border-primary px-3 py-2'>{formatNum(YFData()?.marketCap)}</td>
-                  <td class='relative size-[41px] border border-primary'>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Market capitalization</TableCell>
+                  <TableCell class='w-[96px]'>{formatNum(YFData()?.marketCap)}</TableCell>
+                  <TableCell class='relative w-[41px]'>
                     <button
                       onClick={() => setParameters({ ...parameters(), investmentOption: 'marketCap' })}
                       class={cn(
@@ -322,23 +319,21 @@ const StockEvaluator = () => {
                         },
                       )}
                     />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <table class='table-fixed bg-background font-mono text-background-fg'>
-              <thead>
-                <tr>
-                  <td colSpan={3} class='border border-primary px-3 py-2 font-bold'>
-                    Extra considerations (Optional)
-                  </td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class='border border-primary px-3 py-2'>Dividend yield</td>
-                  <td class='w-[96px] border border-primary px-3 py-2'>{formatPct(dividendYield())}</td>
-                  <td class='relative size-[41px] border border-primary'>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead colSpan={3}>Extra considerations (Optional)</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell>Dividend yield</TableCell>
+                  <TableCell class='w-[96px]'>{formatPct(dividendYield())}</TableCell>
+                  <TableCell class='relative w-[41px]'>
                     <button
                       onClick={() =>
                         setParameters({ ...parameters(), includeDividends: !parameters().includeDividends })
@@ -350,24 +345,22 @@ const StockEvaluator = () => {
                         },
                       )}
                     />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
           <div class='flex basis-full flex-col gap-8'>
-            <table class='table-fixed bg-background font-mono text-background-fg'>
-              <thead>
-                <tr>
-                  <td colSpan={2} class='border border-primary px-3 py-2 font-bold'>
-                    Parameters (Custom input)
-                  </td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class='border border-primary px-3 py-2'>Discount rate</td>
-                  <td class='w-[137px] border border-primary bg-secondary px-3 py-2 text-secondary-fg'>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead colSpan={2}>Parameters (Custom input)</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell>Discount rate</TableCell>
+                  <TableCell class='w-[137px] bg-secondary text-secondary-fg'>
                     <input
                       type='text'
                       pattern='[0-9]+([\.,][0-9]+)?'
@@ -379,11 +372,11 @@ const StockEvaluator = () => {
                       }
                       class='w-full min-w-0 bg-secondary text-secondary-fg'
                     />
-                  </td>
-                </tr>
-                <tr>
-                  <td class='border border-primary px-3 py-2'>Growing years</td>
-                  <td class='w-[137px] border border-primary bg-secondary px-3 py-2 text-secondary-fg'>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Growing years</TableCell>
+                  <TableCell class='w-[137px] bg-secondary text-secondary-fg'>
                     <input
                       type='text'
                       pattern='[0-9]+([\.,][0-9]+)?'
@@ -393,11 +386,11 @@ const StockEvaluator = () => {
                       onFocusOut={(e) => setParameters({ ...parameters(), growingYears: parseFloat(e.target.value) })}
                       class='w-full min-w-0 bg-secondary text-secondary-fg'
                     />
-                  </td>
-                </tr>
-                <tr>
-                  <td class='border border-primary px-3 py-2'>Terminal growth</td>
-                  <td class='w-[137px] border border-primary bg-secondary px-3 py-2 text-secondary-fg'>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Terminal growth</TableCell>
+                  <TableCell class='w-[137px] bg-secondary text-secondary-fg'>
                     <input
                       type='text'
                       pattern='[0-9]+([\.,][0-9]+)?'
@@ -409,39 +402,35 @@ const StockEvaluator = () => {
                       }
                       class='w-full min-w-0 bg-secondary text-secondary-fg'
                     />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <table class='table-fixed bg-background font-mono text-background-fg'>
-              <thead>
-                <tr>
-                  <td colSpan={2} class='border border-primary px-3 py-2 font-bold'>
-                    Final evaluations
-                  </td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class='border border-primary px-3 py-2'>Projected growth</td>
-                  <td class='w-[137px] border border-primary px-3 py-2'>{formatPct(projectedGrowth())}</td>
-                </tr>
-                <tr>
-                  <td class='border border-primary px-3 py-2'>Intrinsic value</td>
-                  <td class='border border-primary px-3 py-2'>{formatNum(intrinsicValue())}</td>
-                </tr>
-                <tr>
-                  <td class='border border-primary px-3 py-2'>Investment</td>
-                  <td class='border border-primary px-3 py-2'>{formatNum(investment())}</td>
-                </tr>
-                <tr id='value-rating'>
-                  <td class='border border-primary bg-primary px-3 py-2 text-primary-fg'>Value rating</td>
-                  <td class='border border-primary bg-primary px-3 py-2 text-primary-fg'>
-                    {formatPct(valueRating(), true)}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead colSpan={2}>Final evaluations</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell>Projected growth</TableCell>
+                  <TableCell class='w-[137px]'>{formatPct(projectedGrowth())}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Intrinsic value</TableCell>
+                  <TableCell class='w-[137px]'>{formatNum(intrinsicValue())}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>Investment</TableCell>
+                  <TableCell class='w-[137px]'>{formatNum(investment())}</TableCell>
+                </TableRow>
+                <TableRow id='value-rating'>
+                  <TableCell class='bg-primary text-primary-fg'>Value rating</TableCell>
+                  <TableCell class='w-[137px] bg-primary text-primary-fg'>{formatPct(valueRating(), true)}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
         </div>
       </div>
