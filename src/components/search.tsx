@@ -1,4 +1,5 @@
-import { Component, For, Show, createSignal } from 'solid-js'
+import { useSearchParams } from '@solidjs/router'
+import { Component, For, Show, createSignal, onMount } from 'solid-js'
 import { YFinanceData, YFinanceQuote, fetchYFinanceData, fetchYFinanceQuotes } from '~/rpc/yfinance'
 import { cn } from '../utils/cn'
 import { LoaderIcon, SearchIcon } from './icons'
@@ -9,14 +10,19 @@ interface SearchProps {
 }
 
 export const YFinanceSearch: Component<SearchProps> = (props) => {
-  const [ticker, setTicker] = createSignal('')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [ticker, setTicker] = createSignal(searchParams.ticker ?? '')
   const [quotes, setQuotes] = createSignal<YFinanceQuote[]>([])
   const [isFocused, setIsFocused] = createSignal(false)
   const [isFetchingQuotes, setIsFetchingQuotes] = createSignal(false)
   const [isFetchingData, setIsFetchingData] = createSignal(false)
 
+  onMount(() => {
+    handleSearch()
+  })
+
   const handleSearch = () => {
-    if (isFetchingData()) {
+    if (isFetchingData() || ticker().length === 0) {
       return
     }
     setQuotes([])
@@ -25,7 +31,10 @@ export const YFinanceSearch: Component<SearchProps> = (props) => {
     fetchYFinanceData(ticker())
       .then(props.onSuccess)
       .catch(props.onError)
-      .finally(() => setIsFetchingData(false))
+      .finally(() => {
+        setIsFetchingData(false)
+        setSearchParams({ ticker: ticker() })
+      })
   }
 
   const handleSelectQuote = (quote: YFinanceQuote) => {
