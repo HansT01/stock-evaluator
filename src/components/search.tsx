@@ -1,5 +1,5 @@
 import { useSearchParams } from '@solidjs/router'
-import { Component, For, Show, createSignal, onMount } from 'solid-js'
+import { Component, For, Show, createEffect, createSignal, onMount } from 'solid-js'
 import { YFinanceData, YFinanceQuote, fetchYFinanceData, fetchYFinanceQuotes } from '~/rpc/yfinance'
 import { cn } from '../utils/cn'
 import { LoaderIcon, SearchIcon } from './icons'
@@ -16,6 +16,20 @@ export const YFinanceSearch: Component<SearchProps> = (props) => {
   const [isFocused, setIsFocused] = createSignal(false)
   const [isFetchingQuotes, setIsFetchingQuotes] = createSignal(false)
   const [isFetchingData, setIsFetchingData] = createSignal(false)
+
+  let inputRef: HTMLInputElement
+
+  createEffect(() => {
+    if (!isFocused()) {
+      inputRef.blur()
+    }
+  })
+
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      setIsFocused(false)
+    }
+  }
 
   onMount(() => {
     handleSearch()
@@ -90,6 +104,7 @@ export const YFinanceSearch: Component<SearchProps> = (props) => {
         class='relative flex w-full items-stretch'
       >
         <input
+          ref={(el) => (inputRef = el)}
           tabIndex={1}
           type='text'
           autocomplete='off'
@@ -99,6 +114,7 @@ export const YFinanceSearch: Component<SearchProps> = (props) => {
             setIsFocused(true)
           }}
           onChange={(e) => setTicker(e.target.value)}
+          onKeyDown={handleKeyDown}
           onInput={handleInput}
           class='min-w-0 max-w-full grow rounded-s-full border border-primary bg-background px-4 py-2 text-background-fg'
         />
