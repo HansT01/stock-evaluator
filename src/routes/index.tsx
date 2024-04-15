@@ -202,7 +202,7 @@ const StockEvaluator = () => {
                     <button
                       onClick={() => setConfigs({ ...configs(), growthIndicator: 'revenues' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
                           'bg-primary': configs().growthIndicator === 'revenues',
                         },
@@ -217,7 +217,7 @@ const StockEvaluator = () => {
                     <button
                       onClick={() => setConfigs({ ...configs(), growthIndicator: 'earnings' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
                           'bg-primary': configs().growthIndicator === 'earnings',
                         },
@@ -232,7 +232,7 @@ const StockEvaluator = () => {
                     <button
                       onClick={() => setConfigs({ ...configs(), growthIndicator: 'dividends' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
                           'bg-primary': configs().growthIndicator === 'dividends',
                         },
@@ -247,7 +247,7 @@ const StockEvaluator = () => {
                     <button
                       onClick={() => setConfigs({ ...configs(), growthIndicator: 'freeCashFlows' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
                           'bg-primary': configs().growthIndicator === 'freeCashFlows',
                         },
@@ -272,7 +272,7 @@ const StockEvaluator = () => {
                     <button
                       onClick={() => setConfigs({ ...configs(), growthIndicator: 'custom' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
                           'bg-primary': configs().growthIndicator === 'custom',
                         },
@@ -296,7 +296,7 @@ const StockEvaluator = () => {
                     <button
                       onClick={() => setConfigs({ ...configs(), investmentOption: 'enterpriseValue' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
                           'bg-primary': configs().investmentOption === 'enterpriseValue',
                         },
@@ -311,7 +311,7 @@ const StockEvaluator = () => {
                     <button
                       onClick={() => setConfigs({ ...configs(), investmentOption: 'marketCap' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
                           'bg-primary': configs().investmentOption === 'marketCap',
                         },
@@ -335,7 +335,7 @@ const StockEvaluator = () => {
                     <button
                       onClick={() => setConfigs({ ...configs(), includeDividends: !configs().includeDividends })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
                           'bg-primary': configs().includeDividends,
                         },
