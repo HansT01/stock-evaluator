@@ -145,7 +145,7 @@ const StockEvaluator = () => {
     <main class='container mx-auto flex min-h-svh max-w-screen-lg flex-col gap-8 bg-accent p-4 text-accent-fg sm:p-8'>
       <YFinanceSearch onSuccess={setYFData} onError={console.error} />
       <div class='flex flex-col gap-8'>
-        <div class='flex min-h-[120px] flex-col px-3'>
+        <div class='flex min-h-[120px] flex-col px-4'>
           <div class='text-6xl font-thin'>{YFData()?.name}</div>
           <div class='mt-2 text-xl font-light'>{YFData()?.industry}</div>
           <div class='font-semibold'>
@@ -154,7 +154,7 @@ const StockEvaluator = () => {
             </a>
           </div>
         </div>
-        <div class='flex min-h-[122px] flex-col items-center gap-2 rounded-lg border border-primary bg-background px-3 py-2 text-background-fg'>
+        <div class='flex min-h-[122px] flex-col items-center gap-2 rounded-lg border border-primary bg-background px-4 py-2 text-background-fg'>
           <p
             class={cn(
               'line-clamp-3 grow bg-gradient-to-b from-background-fg to-transparent bg-clip-text text-left text-transparent',
@@ -170,20 +170,20 @@ const StockEvaluator = () => {
           </button>
         </div>
         <div class='flex flex-wrap gap-4'>
-          <div class='rounded-lg border border-primary bg-background px-3 py-2 font-mono text-background-fg'>
+          <div class='rounded-lg border border-primary bg-background px-4 py-2 font-mono text-background-fg'>
             Currency: {YFData()?.currency ?? 'N/A'}
           </div>
-          <div class='rounded-lg border border-primary bg-background px-3 py-2 font-mono text-background-fg'>
+          <div class='rounded-lg border border-primary bg-background px-4 py-2 font-mono text-background-fg'>
             Share price: {YFData()?.sharePrice ?? NaN}
           </div>
           <button
             onClick={() => document.getElementById('value-rating')?.scrollIntoView()}
-            class='rounded-lg border border-primary bg-primary px-3 py-2 font-mono text-primary-fg'
+            class='rounded-lg border border-primary bg-primary px-4 py-2 font-mono text-primary-fg'
           >
             Value rating: {formatPct(valueRating(), true)}
           </button>
         </div>
-        <div class='min-h-[400px] w-full rounded-lg border border-primary bg-background px-3 py-2 text-background-fg'>
+        <div class='min-h-[400px] w-full rounded-lg border border-primary bg-background px-4 py-2 text-background-fg'>
           <Show when={getChartProps()}>{(props) => <GrowthChart {...props()} />}</Show>
         </div>
         <div class='flex flex-col gap-8 md:flex-row'>
@@ -197,12 +197,12 @@ const StockEvaluator = () => {
               <TableBody>
                 <TableRow>
                   <TableCell>Revenues growth</TableCell>
-                  <TableCell class='w-[96px]'>{formatPct(calculateGrowth('revenues'))}</TableCell>
+                  <TableCell class='w-[104px]'>{formatPct(calculateGrowth('revenues'))}</TableCell>
                   <TableCell class='relative w-[41px]'>
                     <button
                       onClick={() => setConfigs({ ...configs(), growthIndicator: 'revenues' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
                           'bg-primary': configs().growthIndicator === 'revenues',
                         },
@@ -212,12 +212,12 @@ const StockEvaluator = () => {
                 </TableRow>
                 <TableRow>
                   <TableCell>Earnings growth</TableCell>
-                  <TableCell class='w-[96px]'>{formatPct(calculateGrowth('earnings'))}</TableCell>
+                  <TableCell class='w-[104px]'>{formatPct(calculateGrowth('earnings'))}</TableCell>
                   <TableCell class='relative w-[41px]'>
                     <button
                       onClick={() => setConfigs({ ...configs(), growthIndicator: 'earnings' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
                           'bg-primary': configs().growthIndicator === 'earnings',
                         },
@@ -227,12 +227,12 @@ const StockEvaluator = () => {
                 </TableRow>
                 <TableRow>
                   <TableCell>Dividends growth</TableCell>
-                  <TableCell class='w-[96px]'>{formatPct(calculateGrowth('dividends'))}</TableCell>
+                  <TableCell class='w-[104px]'>{formatPct(calculateGrowth('dividends'))}</TableCell>
                   <TableCell class='relative w-[41px]'>
                     <button
                       onClick={() => setConfigs({ ...configs(), growthIndicator: 'dividends' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
                           'bg-primary': configs().growthIndicator === 'dividends',
                         },
@@ -242,12 +242,12 @@ const StockEvaluator = () => {
                 </TableRow>
                 <TableRow>
                   <TableCell>Cash flows growth</TableCell>
-                  <TableCell class='w-[96px]'>{formatPct(calculateGrowth('freeCashFlows'))}</TableCell>
+                  <TableCell class='w-[104px]'>{formatPct(calculateGrowth('freeCashFlows'))}</TableCell>
                   <TableCell class='relative w-[41px]'>
                     <button
                       onClick={() => setConfigs({ ...configs(), growthIndicator: 'freeCashFlows' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
                           'bg-primary': configs().growthIndicator === 'freeCashFlows',
                         },
@@ -257,7 +257,7 @@ const StockEvaluator = () => {
                 </TableRow>
                 <TableRow>
                   <TableCell>Custom growth</TableCell>
-                  <TableCell class='w-[96px] bg-secondary text-secondary-fg'>
+                  <TableCell class='w-[104px] bg-secondary text-secondary-fg'>
                     <input
                       type='text'
                       pattern='[0-9]+([\.,][0-9]+)?'
@@ -272,7 +272,7 @@ const StockEvaluator = () => {
                     <button
                       onClick={() => setConfigs({ ...configs(), growthIndicator: 'custom' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
                           'bg-primary': configs().growthIndicator === 'custom',
                         },
@@ -291,12 +291,12 @@ const StockEvaluator = () => {
               <TableBody>
                 <TableRow>
                   <TableCell>Enterprise value</TableCell>
-                  <TableCell class='w-[96px]'>{formatNum(YFData()?.enterpriseValue)}</TableCell>
+                  <TableCell class='w-[104px]'>{formatNum(YFData()?.enterpriseValue)}</TableCell>
                   <TableCell class='relative w-[41px]'>
                     <button
                       onClick={() => setConfigs({ ...configs(), investmentOption: 'enterpriseValue' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
                           'bg-primary': configs().investmentOption === 'enterpriseValue',
                         },
@@ -306,12 +306,12 @@ const StockEvaluator = () => {
                 </TableRow>
                 <TableRow>
                   <TableCell>Market capitalization</TableCell>
-                  <TableCell class='w-[96px]'>{formatNum(YFData()?.marketCap)}</TableCell>
+                  <TableCell class='w-[104px]'>{formatNum(YFData()?.marketCap)}</TableCell>
                   <TableCell class='relative w-[41px]'>
                     <button
                       onClick={() => setConfigs({ ...configs(), investmentOption: 'marketCap' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
                           'bg-primary': configs().investmentOption === 'marketCap',
                         },
@@ -330,12 +330,12 @@ const StockEvaluator = () => {
               <TableBody>
                 <TableRow>
                   <TableCell>Dividend yield</TableCell>
-                  <TableCell class='w-[96px]'>{formatPct(dividendYield())}</TableCell>
+                  <TableCell class='w-[104px]'>{formatPct(dividendYield())}</TableCell>
                   <TableCell class='relative w-[41px]'>
                     <button
                       onClick={() => setConfigs({ ...configs(), includeDividends: !configs().includeDividends })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 size-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
                         {
                           'bg-primary': configs().includeDividends,
                         },
@@ -356,7 +356,7 @@ const StockEvaluator = () => {
               <TableBody>
                 <TableRow>
                   <TableCell>Discount rate</TableCell>
-                  <TableCell class='w-[137px] bg-secondary text-secondary-fg'>
+                  <TableCell class='w-[145px] bg-secondary text-secondary-fg'>
                     <input
                       type='text'
                       pattern='[0-9]+([\.,][0-9]+)?'
@@ -370,7 +370,7 @@ const StockEvaluator = () => {
                 </TableRow>
                 <TableRow>
                   <TableCell>Growing years</TableCell>
-                  <TableCell class='w-[137px] bg-secondary text-secondary-fg'>
+                  <TableCell class='w-[145px] bg-secondary text-secondary-fg'>
                     <input
                       type='text'
                       pattern='[0-9]+([\.,][0-9]+)?'
@@ -384,7 +384,7 @@ const StockEvaluator = () => {
                 </TableRow>
                 <TableRow>
                   <TableCell>Terminal growth</TableCell>
-                  <TableCell class='w-[137px] bg-secondary text-secondary-fg'>
+                  <TableCell class='w-[145px] bg-secondary text-secondary-fg'>
                     <input
                       type='text'
                       pattern='[0-9]+([\.,][0-9]+)?'
@@ -407,19 +407,19 @@ const StockEvaluator = () => {
               <TableBody>
                 <TableRow>
                   <TableCell>Projected growth</TableCell>
-                  <TableCell class='w-[137px]'>{formatPct(projectedGrowth())}</TableCell>
+                  <TableCell class='w-[145px]'>{formatPct(projectedGrowth())}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Intrinsic value</TableCell>
-                  <TableCell class='w-[137px]'>{formatNum(intrinsicValue())}</TableCell>
+                  <TableCell class='w-[145px]'>{formatNum(intrinsicValue())}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Investment</TableCell>
-                  <TableCell class='w-[137px]'>{formatNum(investment())}</TableCell>
+                  <TableCell class='w-[145px]'>{formatNum(investment())}</TableCell>
                 </TableRow>
                 <TableRow id='value-rating'>
                   <TableCell class='bg-primary text-primary-fg'>Value rating</TableCell>
-                  <TableCell class='w-[137px] bg-primary text-primary-fg'>{formatPct(valueRating(), true)}</TableCell>
+                  <TableCell class='w-[145px] bg-primary text-primary-fg'>{formatPct(valueRating(), true)}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
