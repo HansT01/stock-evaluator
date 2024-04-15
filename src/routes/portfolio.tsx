@@ -21,7 +21,7 @@ const Portfolio = () => {
           Press me
         </button>
       </div>
-      <div class='min-h-[400px] w-full rounded-lg border border-primary bg-background px-3 py-2 text-background-fg'>
+      <div class='min-h-[400px] w-full rounded-lg border border-primary bg-background px-4 py-2 text-background-fg'>
         <Show when={data()}>{(data) => <PortfolioChart xData={data().timestamps} yData={data().price} />}</Show>
       </div>
     </main>
