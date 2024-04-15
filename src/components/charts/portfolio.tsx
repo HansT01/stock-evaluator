@@ -22,39 +22,22 @@ export const PortfolioChart: Component<PortfolioChartProps> = (props) => {
             data: props.xData.map((_, i) => {
               return { x: props.xData[i], y: props.yData[i] }
             }),
-            pointRadius: 10,
-            pointHoverRadius: 10,
+            pointRadius: 0,
+            pointHoverRadius: 5,
             pointHitRadius: 10,
             tension: 0.25,
           },
         ],
-        // datasets: [
-        //   {
-        //     data: [
-        //       {
-        //         x: 1712620800 * 1000,
-        //         y: 50,
-        //       },
-        //       {
-        //         x: 1712707200 * 1000,
-        //         y: 50,
-        //       },
-        //       {
-        //         x: 1712793600 * 1000,
-        //         y: 60,
-        //       },
-        //       {
-        //         x: 1712880000 * 1000,
-        //         y: 20,
-        //       },
-        //     ],
-        //   },
-        // ],
       },
       options: {
+        responsive: true,
+        maintainAspectRatio: false,
         scales: {
           x: {
             type: 'time',
+          },
+          y: {
+            beginAtZero: true,
           },
         },
       },
