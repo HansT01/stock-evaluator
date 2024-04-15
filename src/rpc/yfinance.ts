@@ -205,3 +205,40 @@ export const fetchYFinanceQuotes = async (query: string) => {
   const { quotes } = raw as { quotes: YFinanceQuote[] }
   return quotes.filter((quote) => quote.quoteType === 'EQUITY' && quote.industry !== undefined).slice(0, 5)
 }
+
+export const fetchPriceHistory = async (
+  ticker: string,
+  start: number,
+  end: number,
+  cookie?: string,
+  crumb?: string,
+) => {
+  'use server'
+  cookie ??= await fetchYFinanceCookie()
+  crumb ??= await fetchYFinanceCrumb(cookie)
+
+  const url =
+    `https://query2.finance.yahoo.com/v8/finance/chart/${ticker}?` +
+    new URLSearchParams({
+      'period1': start.toString(),
+      'period2': end.toString(),
+      'interval': '1d',
+      'includePrePost': 'False',
+      'events': 'div%2Csplits%2CcapitalGains',
+      'crumb': crumb,
+    })
+  const res = await fetch(url, {
+    headers: {
+      'Cookie': cookie,
+    },
+  })
+  if (!res.ok) {
+    throw new Error(`Status: ${res.status}; Body: ${await res.text()}`)
+  }
+  const raw = await res.json()
+  return {
+    currency: raw.chart.result[0].meta.currency,
+    timestamps: raw.chart.result[0].timestamp,
+    price: raw.chart.result[0].indicators.adjclose[0].adjclose,
+  }
+}

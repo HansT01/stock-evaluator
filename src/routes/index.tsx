@@ -7,7 +7,7 @@ import { YFinanceData } from '~/rpc/yfinance'
 import { calculateDCF, fitExponential } from '~/utils/calculate'
 import { cn } from '~/utils/cn'
 import { formatCamelCase, formatNum, formatPct } from '~/utils/format'
-import { GrowthChart } from '../components/growth-chart'
+import { GrowthChart } from '../components/charts/growth'
 import { parseCookies } from '../utils/cookies'
 
 interface EvaluatorConfigs {

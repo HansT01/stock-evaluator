@@ -8,6 +8,7 @@ interface GrowthChartProps {
   yData: (number | null)[]
   yGrowth: number[]
 }
+
 export const GrowthChart: Component<GrowthChartProps> = (props) => {
   let chart: Chart<'line'>
   let ref: HTMLCanvasElement
