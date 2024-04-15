@@ -236,9 +236,10 @@ export const fetchPriceHistory = async (
     throw new Error(`Status: ${res.status}; Body: ${await res.text()}`)
   }
   const raw = await res.json()
-  return {
-    currency: raw.chart.result[0].meta.currency,
-    timestamps: raw.chart.result[0].timestamp,
-    price: raw.chart.result[0].indicators.adjclose[0].adjclose,
+  const parsed = {
+    currency: raw.chart.result[0].meta.currency as string,
+    timestamps: raw.chart.result[0].timestamp.map((timestamp: number) => timestamp * 1000) as number[],
+    price: raw.chart.result[0].indicators.adjclose[0].adjclose as number[],
   }
+  return parsed
 }
