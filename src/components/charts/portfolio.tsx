@@ -1,11 +1,10 @@
 import { Chart } from 'chart.js/auto'
 import 'chartjs-adapter-dayjs-4/dist/chartjs-adapter-dayjs-4.esm'
 import { Component, createEffect, onCleanup, onMount } from 'solid-js'
+import { PriceHistory } from '~/rpc/yfinance'
 
 interface PortfolioChartProps {
-  // label: string
-  xData: number[]
-  yData: number[]
+  data: PriceHistory[]
 }
 
 export const PortfolioChart: Component<PortfolioChartProps> = (props) => {
@@ -13,21 +12,23 @@ export const PortfolioChart: Component<PortfolioChartProps> = (props) => {
   let ref: HTMLCanvasElement
 
   onMount(() => {
+    console.log(props.data.length)
+    // @ts-ignore
     chart = new Chart(ref, {
       type: 'line',
       data: {
-        datasets: [
-          {
-            label: '',
-            data: props.xData.map((_, i) => {
-              return { x: props.xData[i], y: props.yData[i] }
+        datasets: props.data.map((data) => {
+          return {
+            label: data.ticker,
+            data: data.timestamps.map((_, i) => {
+              return { x: data.timestamps[i] * 1000, y: data.prices[i] }
             }),
-            pointRadius: 0,
-            pointHoverRadius: 5,
+            pointRadius: data.timestamps.length <= 80 ? 5 : 0,
+            pointHoverRadius: data.timestamps.length <= 80 ? 5 : 0,
             pointHitRadius: 10,
             tension: 0.25,
-          },
-        ],
+          }
+        }),
       },
       options: {
         responsive: true,
@@ -38,6 +39,7 @@ export const PortfolioChart: Component<PortfolioChartProps> = (props) => {
           },
           y: {
             beginAtZero: true,
+            suggestedMax: 2 * Math.max(...props.data.map((data) => data.prices[0])),
           },
         },
       },
@@ -49,7 +51,7 @@ export const PortfolioChart: Component<PortfolioChartProps> = (props) => {
       chart.options.scales!.y!.ticks!.color = '#ffffffee'
       chart.options.scales!.x!.grid!.color = '#ffffff44'
       chart.options.scales!.y!.grid!.color = (context) => {
-        if (context.tick.value === 0) {
+        if (context.tick.value === 1) {
           return '#ffffffbb'
         }
         return '#ffffff44'
@@ -60,7 +62,7 @@ export const PortfolioChart: Component<PortfolioChartProps> = (props) => {
       chart.options.scales!.y!.ticks!.color = '#000000ee'
       chart.options.scales!.x!.grid!.color = '#00000044'
       chart.options.scales!.y!.grid!.color = (context) => {
-        if (context.tick.value === 0) {
+        if (context.tick.value === 1) {
           return '#000000bb'
         }
         return '#00000044'

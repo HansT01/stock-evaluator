@@ -1,4 +1,4 @@
-import { FinancialStatementType } from './yfinance-statement-types'
+import { FinancialStatementType, TimeSeriesInterval } from './yfinance-types'
 
 export const fetchYFinanceCookie = async () => {
   const res = await fetch('https://fc.yahoo.com')
@@ -206,10 +206,18 @@ export const fetchYFinanceQuotes = async (query: string) => {
   return quotes.filter((quote) => quote.quoteType === 'EQUITY' && quote.industry !== undefined).slice(0, 5)
 }
 
+export interface PriceHistory {
+  ticker: string
+  currency: string
+  timestamps: number[]
+  prices: number[]
+}
+
 export const fetchPriceHistory = async (
   ticker: string,
   start: number,
   end: number,
+  interval: TimeSeriesInterval = '1d',
   cookie?: string,
   crumb?: string,
 ) => {
@@ -222,7 +230,7 @@ export const fetchPriceHistory = async (
     new URLSearchParams({
       'period1': start.toString(),
       'period2': end.toString(),
-      'interval': '1d',
+      'interval': interval,
       'includePrePost': 'False',
       'events': 'div%2Csplits%2CcapitalGains',
       'crumb': crumb,
@@ -236,10 +244,14 @@ export const fetchPriceHistory = async (
     throw new Error(`Status: ${res.status}; Body: ${await res.text()}`)
   }
   const raw = await res.json()
+
+  console.log(JSON.stringify(raw, null, 2))
+
   const parsed = {
+    ticker: raw.chart.result[0].meta.symbol as string,
     currency: raw.chart.result[0].meta.currency as string,
-    timestamps: raw.chart.result[0].timestamp.map((timestamp: number) => timestamp * 1000) as number[],
-    price: raw.chart.result[0].indicators.adjclose[0].adjclose as number[],
+    timestamps: raw.chart.result[0].timestamp as number[],
+    prices: raw.chart.result[0].indicators.quote[0].close as number[],
   }
   return parsed
 }
