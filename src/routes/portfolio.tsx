@@ -1,7 +1,8 @@
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
-import { Show, createSignal, onMount } from 'solid-js'
+import { For, Show, createSignal, onMount } from 'solid-js'
 import { PortfolioChart } from '~/components/charts/portfolio'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/table'
 import { PriceHistory, fetchPriceHistory } from '~/rpc/yfinance'
 
 dayjs.extend(utc)
@@ -33,8 +34,27 @@ const alignHistory = (base: PriceHistory, target: PriceHistory) => {
   return result
 }
 
+interface Holding {
+  ticker: string
+  units: number
+  name: string
+  price: number
+}
+
+const defaultHoldings: Holding[] = [
+  { ticker: 'CNI.AX', units: 1300, name: '', price: 1 },
+  { ticker: 'GNC.AX', units: 250, name: '', price: 1 },
+  { ticker: 'PLS.AX', units: 685, name: '', price: 1 },
+  { ticker: 'PRU.AX', units: 1100, name: '', price: 1 },
+  { ticker: 'SMR.AX', units: 750, name: '', price: 1 },
+  { ticker: 'SSR.AX', units: 420, name: '', price: 1 },
+  { ticker: 'WHC.AX', units: 360, name: '', price: 1 },
+  { ticker: 'YAL.AX', units: 870, name: '', price: 1 },
+]
+
 const Portfolio = () => {
-  const [data, setData] = createSignal<PriceHistory[] | null>(null)
+  const [holdings, setHoldings] = createSignal<Holding[]>(defaultHoldings)
+  const [histories, setHistories] = createSignal<PriceHistory[] | null>(null)
 
   const handleButton = async () => {
     console.log('sending rpc request')
@@ -42,9 +62,8 @@ const Portfolio = () => {
     const end = dayjs().unix()
     const base = await fetchPriceHistory('^AXJO', start, end)
     // const base = await fetchPriceHistory('^GSPC', start, end)
-    const tickers = ['CNI.AX', 'GNC.AX', 'PLS.AX', 'PRU.AX', 'SMR.AX', 'SSR.AX', 'WHC.AX', 'YAL.AX']
-    const resolution = await Promise.all(tickers.map((ticker) => fetchPriceHistory(ticker, start, end)))
-    setData(
+    const resolution = await Promise.all(holdings().map((ticker) => fetchPriceHistory(ticker.ticker, start, end)))
+    setHistories(
       resolution.map((res) => {
         return { ...res, prices: adjustRelativePerformance(base.prices, res.prices) }
       }),
@@ -63,8 +82,57 @@ const Portfolio = () => {
         </button>
       </div>
       <div class='min-h-[400px] w-full rounded-lg border border-primary bg-background px-4 py-2 text-background-fg'>
-        <Show when={data()}>{(data) => <PortfolioChart data={data()} />}</Show>
+        <Show when={histories()}>{(data) => <PortfolioChart data={data()} />}</Show>
       </div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Ticker</TableHead>
+            <TableHead>Units</TableHead>
+            <TableHead>Company Name</TableHead>
+            <TableHead>Price</TableHead>
+            <TableHead>Total</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <For each={holdings()}>
+            {(holding) => (
+              <TableRow>
+                <TableCell>
+                  <input
+                    type='text'
+                    autocomplete='none'
+                    value={holding.ticker}
+                    onFocusIn={(e) => e.target.select()}
+                    onFocusOut={(e) =>
+                      setHoldings(holdings().map((h) => (h === holding ? { ...h, ticker: e.target.value } : h)))
+                    }
+                    class='w-full min-w-0 bg-background text-background-fg'
+                  />
+                </TableCell>
+                <TableCell>
+                  <input
+                    type='text'
+                    pattern='[0-9]+([\.,][0-9]+)?'
+                    autocomplete='none'
+                    value={holding.units}
+                    onFocusIn={(e) => e.target.select()}
+                    onFocusOut={(e) =>
+                      setHoldings(
+                        holdings().map((h) => (h === holding ? { ...h, units: parseFloat(e.target.value) } : h)),
+                      )
+                    }
+                    class='w-full min-w-0 bg-background text-background-fg'
+                  />
+                </TableCell>
+                <TableCell>{holding.name}</TableCell>
+                <TableCell>{holding.price}</TableCell>
+                <TableCell>{holding.units * holding.price}</TableCell>
+              </TableRow>
+            )}
+          </For>
+        </TableBody>
+      </Table>
     </main>
   )
 }
