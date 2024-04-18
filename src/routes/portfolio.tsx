@@ -8,9 +8,7 @@ dayjs.extend(utc)
 
 const adjustRelativePerformance = (base: number[], target: number[]) => {
   const baseRatio = base[0] / target[0]
-  return target.map((price, i) => {
-    return (price * baseRatio) / base[i]
-  })
+  return target.map((price, i) => (price * baseRatio) / base[i])
 }
 
 const alignHistory = (base: PriceHistory, target: PriceHistory) => {
@@ -40,27 +38,17 @@ const Portfolio = () => {
 
   const handleButton = async () => {
     console.log('sending rpc request')
-    const start = dayjs().subtract(90, 'days').unix()
+    const start = dayjs('2024-03-18').unix()
     const end = dayjs().unix()
-    // const base = await fetchPriceHistory('^AXJO', start, end)
-    const base = await fetchPriceHistory('^GSPC', start, end)
-    const target1 = alignHistory(base, await fetchPriceHistory('SLC.AX', start, end))
-    const target2 = alignHistory(base, await fetchPriceHistory('ABB.AX', start, end))
-
-    setData([
-      {
-        ticker: target1.ticker,
-        currency: target1.currency,
-        timestamps: target1.timestamps,
-        prices: adjustRelativePerformance(base.prices, target1.prices),
-      },
-      {
-        ticker: target2.ticker,
-        currency: target2.currency,
-        timestamps: target2.timestamps,
-        prices: adjustRelativePerformance(base.prices, target2.prices),
-      },
-    ])
+    const base = await fetchPriceHistory('^AXJO', start, end)
+    // const base = await fetchPriceHistory('^GSPC', start, end)
+    const tickers = ['CNI.AX', 'GNC.AX', 'PLS.AX', 'PRU.AX', 'SMR.AX', 'SSR.AX', 'WHC.AX', 'YAL.AX']
+    const resolution = await Promise.all(tickers.map((ticker) => fetchPriceHistory(ticker, start, end)))
+    setData(
+      resolution.map((res) => {
+        return { ...res, prices: adjustRelativePerformance(base.prices, res.prices) }
+      }),
+    )
   }
 
   onMount(() => {
@@ -80,7 +68,5 @@ const Portfolio = () => {
     </main>
   )
 }
-
-// /v7/finance/spark?symbols=%5EN225&range=1d&interval=5m&indicators=close&includeTimestamps=false&includePrePost=false&corsDomain=finance.yahoo.com&.tsrc=finance HTTP/2
 
 export default Portfolio

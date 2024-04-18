@@ -245,8 +245,6 @@ export const fetchPriceHistory = async (
   }
   const raw = await res.json()
 
-  console.log(JSON.stringify(raw, null, 2))
-
   const parsed = {
     ticker: raw.chart.result[0].meta.symbol as string,
     currency: raw.chart.result[0].meta.currency as string,
