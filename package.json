@@ -7,8 +7,8 @@
     "start": "vinxi start"
   },
   "dependencies": {
-    "@solidjs/router": "^0.13.1",
-    "@solidjs/start": "^0.7.7",
+    "@solidjs/router": "^0.13.2",
+    "@solidjs/start": "1.0.0-rc.0",
     "autoprefixer": "^10.4.19",
     "chart.js": "^4.4.2",
     "chartjs-adapter-dayjs-4": "^1.0.4",
@@ -18,7 +18,7 @@
     "solid-js": "^1.8.16",
     "tailwind-merge": "^2.2.2",
     "tailwindcss": "^3.3.3",
-    "vinxi": "^0.3.10"
+    "vinxi": "^0.3.11"
   },
   "engines": {
     "node": ">=18"
