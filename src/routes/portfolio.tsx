@@ -80,6 +80,7 @@ const Portfolio = () => {
   onMount(async () => {
     const start = dayjs('2024-03-18').unix()
     const end = dayjs().unix()
+    handleButton()
     for (let holding of holdings()) {
       fetchPriceHistory(holding.ticker, start, end).then((history) =>
         setHoldings(
