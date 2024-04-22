@@ -12,8 +12,6 @@ export const PortfolioChart: Component<PortfolioChartProps> = (props) => {
   let ref: HTMLCanvasElement
 
   onMount(() => {
-    console.log(props.data.length)
-    // @ts-ignore
     chart = new Chart(ref, {
       type: 'line',
       data: {
