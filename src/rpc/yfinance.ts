@@ -1,13 +1,13 @@
 import { FinancialStatementType } from './yfinance-statement-types'
 
 export const fetchYFinanceCookie = async () => {
-  const res = await fetch('https://fc.yahoo.com')
+  const res = await fetch(import.meta.env.VITE_COOKIE_URL)
   const cookie = res.headers.getSetCookie()[0]
   return cookie
 }
 
 export const fetchYFinanceCrumb = async (cookie: string) => {
-  const res = await fetch('https://query2.finance.yahoo.com/v1/test/getcrumb', {
+  const res = await fetch(import.meta.env.VITE_CRUMB_URL, {
     headers: {
       'Cookie': cookie,
       'User-Agent':
@@ -40,7 +40,7 @@ const fetchTimeSeries = async (ticker: string) => {
   ]
 
   const url =
-    `https://query2.finance.yahoo.com/ws/fundamentals-timeseries/v1/finance/timeseries/${ticker}?` +
+    `${import.meta.env.VITE_TIMESERIES_URL}/${ticker}?` +
     new URLSearchParams({
       'type': types.join(','),
       'period1': Math.floor(period1).toString(),
@@ -82,7 +82,7 @@ const fetchQuoteSummary = async (ticker: string, cookie?: string, crumb?: string
   cookie ??= await fetchYFinanceCookie()
   crumb ??= await fetchYFinanceCrumb(cookie)
   const url =
-    `https://query2.finance.yahoo.com/v10/finance/quoteSummary/${ticker}?` +
+    `${import.meta.env.VITE_QUOTESUMMARY_URL}/${ticker}?` +
     new URLSearchParams({
       'modules': modules.join(','),
       'formatted': 'false',
@@ -186,7 +186,7 @@ export interface YFinanceQuote {
 export const fetchYFinanceQuotes = async (query: string) => {
   'use server'
   const url =
-    'https://query2.finance.yahoo.com/v1/finance/search?' +
+    `${import.meta.env.VITE_QUOTES_URL}?` +
     new URLSearchParams({
       'q': query,
       'lang': 'en-US',
