@@ -226,7 +226,7 @@ export const fetchPriceHistory = async (
   crumb ??= await fetchYFinanceCrumb(cookie)
 
   const url =
-    `https://query2.finance.yahoo.com/v8/finance/chart/${ticker}?` +
+    `${import.meta.env.VITE_PRICEHISTORY_URL}/${ticker}?` +
     new URLSearchParams({
       'period1': start.toString(),
       'period2': end.toString(),
