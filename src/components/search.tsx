@@ -85,7 +85,7 @@ export const YFinanceSearch: Component<SearchProps> = (props) => {
       clearTimeout(timeout)
       timeout = null
     }
-    timeout = setTimeout(handleGetQuotes, 200)
+    timeout = setTimeout(handleGetQuotes, 500)
   }
 
   return (
