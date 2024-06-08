@@ -1,5 +1,6 @@
 'use server'
 
+import dayjs, { Dayjs } from 'dayjs'
 import { getRequestEvent } from 'solid-js/web'
 import { FinancialStatementType } from './yfinance-statement-types'
 
@@ -135,55 +136,54 @@ const rateLimiter: any = globalThis
 
 export const fetchYFinanceData = async (ticker: string, cookie?: string, crumb?: string) => {
   const addr = getRequestEvent()?.clientAddress
-  throw new Error(addr)
-  // if (addr !== undefined) {
-  //   const lastInvocation: Dayjs | undefined = rateLimiter[addr]
-  //   if (lastInvocation !== undefined && lastInvocation > dayjs().subtract(1, 'seconds')) {
-  //     throw new Error(`Client: ${addr} is being rate limited`)
-  //   }
-  //   rateLimiter[addr] = dayjs()
-  // }
+  if (addr !== undefined) {
+    const lastInvocation: Dayjs | undefined = rateLimiter[addr]
+    if (lastInvocation !== undefined && lastInvocation > dayjs().subtract(1, 'seconds')) {
+      throw new Error(`Client: ${addr} is being rate limited`)
+    }
+    rateLimiter[addr] = dayjs()
+  }
 
-  // const [timeSeries, quoteSummary] = await Promise.all([
-  //   fetchTimeSeries(ticker),
-  //   fetchQuoteSummary(ticker, cookie, crumb),
-  // ])
-  // const dates = Object.keys(timeSeries).sort()
-  // const fiscalYearEnds = dates.filter((date) => timeSeries[date].annualTotalRevenue !== undefined)
+  const [timeSeries, quoteSummary] = await Promise.all([
+    fetchTimeSeries(ticker),
+    fetchQuoteSummary(ticker, cookie, crumb),
+  ])
+  const dates = Object.keys(timeSeries).sort()
+  const fiscalYearEnds = dates.filter((date) => timeSeries[date].annualTotalRevenue !== undefined)
 
-  // const recentQuarter = timeSeries[dates[dates.length - 1]]
-  // const recentYearEnd = timeSeries[fiscalYearEnds[fiscalYearEnds.length - 1]]
-  // const marketCap =
-  //   quoteSummary.sharePrice *
-  //   (recentQuarter.quarterlyOrdinarySharesNumber ?? recentYearEnd.annualOrdinarySharesNumber ?? NaN)
-  // const enterpriseValue =
-  //   marketCap +
-  //   (recentQuarter.quarterlyTotalDebt ?? recentYearEnd.annualTotalDebt ?? 0) -
-  //   (recentQuarter.quarterlyCashAndCashEquivalents ?? recentYearEnd.annualCashAndCashEquivalents ?? 0) -
-  //   (recentQuarter.quarterlyOtherShortTermInvestments ?? recentYearEnd.annualOtherShortTermInvestments ?? 0)
+  const recentQuarter = timeSeries[dates[dates.length - 1]]
+  const recentYearEnd = timeSeries[fiscalYearEnds[fiscalYearEnds.length - 1]]
+  const marketCap =
+    quoteSummary.sharePrice *
+    (recentQuarter.quarterlyOrdinarySharesNumber ?? recentYearEnd.annualOrdinarySharesNumber ?? NaN)
+  const enterpriseValue =
+    marketCap +
+    (recentQuarter.quarterlyTotalDebt ?? recentYearEnd.annualTotalDebt ?? 0) -
+    (recentQuarter.quarterlyCashAndCashEquivalents ?? recentYearEnd.annualCashAndCashEquivalents ?? 0) -
+    (recentQuarter.quarterlyOtherShortTermInvestments ?? recentYearEnd.annualOtherShortTermInvestments ?? 0)
 
-  // const revenues = fiscalYearEnds.map((year) => timeSeries[year].annualTotalRevenue ?? null)
-  // const earnings = fiscalYearEnds.map((year) => timeSeries[year].annualNetIncome ?? null)
-  // const dividends = fiscalYearEnds.map((year) => {
-  //   const dividends = timeSeries[year].annualCashDividendsPaid
-  //   if (dividends === undefined) {
-  //     return null
-  //   }
-  //   return Math.abs(dividends)
-  // })
-  // const freeCashFlows = fiscalYearEnds.map((year) => timeSeries[year].annualFreeCashFlow ?? null)
+  const revenues = fiscalYearEnds.map((year) => timeSeries[year].annualTotalRevenue ?? null)
+  const earnings = fiscalYearEnds.map((year) => timeSeries[year].annualNetIncome ?? null)
+  const dividends = fiscalYearEnds.map((year) => {
+    const dividends = timeSeries[year].annualCashDividendsPaid
+    if (dividends === undefined) {
+      return null
+    }
+    return Math.abs(dividends)
+  })
+  const freeCashFlows = fiscalYearEnds.map((year) => timeSeries[year].annualFreeCashFlow ?? null)
 
-  // const data: YFinanceData = {
-  //   ...quoteSummary,
-  //   marketCap,
-  //   enterpriseValue,
-  //   fiscalYearEnds,
-  //   revenues,
-  //   earnings,
-  //   dividends,
-  //   freeCashFlows,
-  // }
-  // return data
+  const data: YFinanceData = {
+    ...quoteSummary,
+    marketCap,
+    enterpriseValue,
+    fiscalYearEnds,
+    revenues,
+    earnings,
+    dividends,
+    freeCashFlows,
+  }
+  return data
 }
 
 export interface YFinanceQuote {
