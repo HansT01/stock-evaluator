@@ -10,9 +10,6 @@ export const fetchYFinanceCookie = async () => {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0',
     },
   })
-  if (!res.ok) {
-    throw new Error(`fetchYFinanceCookie; Status: ${res.status}; Body: ${await res.text()}`)
-  }
   const cookie = res.headers.getSetCookie()[0]
   return cookie
 }
@@ -56,7 +53,11 @@ const fetchTimeSeries = async (ticker: string) => {
       'period1': Math.floor(period1).toString(),
       'period2': Math.floor(period2).toString(),
     })
-  const res = await fetch(url)
+  const res = await fetch(url, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0',
+    },
+  })
   if (!res.ok) {
     throw new Error(`fetchTimeSeries; Status: ${res.status}; Body: ${await res.text()}`)
   }
@@ -101,6 +102,7 @@ const fetchQuoteSummary = async (ticker: string, cookie?: string, crumb?: string
   const res = await fetch(url, {
     headers: {
       'Cookie': cookie,
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0',
     },
   })
   if (!res.ok) {
@@ -215,7 +217,11 @@ export const fetchYFinanceQuotes = async (query: string) => {
       'newsCount': '0',
       'listsCount': '0',
     })
-  const res = await fetch(url)
+  const res = await fetch(url, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0',
+    },
+  })
   if (!res.ok) {
     throw new Error(`fetchYFinanceQuotes; Status: ${res.status}; Body: ${await res.text()}`)
   }
