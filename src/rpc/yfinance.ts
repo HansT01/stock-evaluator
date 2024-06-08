@@ -1,3 +1,7 @@
+'use server'
+
+import dayjs, { Dayjs } from 'dayjs'
+import { getRequestEvent } from 'solid-js/web'
 import { FinancialStatementType } from './yfinance-statement-types'
 
 export const fetchYFinanceCookie = async () => {
@@ -128,8 +132,18 @@ export interface YFinanceData {
   freeCashFlows: (number | null)[]
 }
 
+const rateLimiter: any = globalThis
+
 export const fetchYFinanceData = async (ticker: string, cookie?: string, crumb?: string) => {
-  'use server'
+  const addr = getRequestEvent()?.clientAddress
+  if (addr !== undefined) {
+    const lastInvocation: Dayjs | undefined = rateLimiter[addr]
+    if (lastInvocation !== undefined && lastInvocation > dayjs().subtract(1, 'seconds')) {
+      throw new Error(`Client: ${addr} is being rate limited`)
+    }
+    rateLimiter[addr] = dayjs()
+  }
+
   const [timeSeries, quoteSummary] = await Promise.all([
     fetchTimeSeries(ticker),
     fetchQuoteSummary(ticker, cookie, crumb),
@@ -184,7 +198,6 @@ export interface YFinanceQuote {
 }
 
 export const fetchYFinanceQuotes = async (query: string) => {
-  'use server'
   const url =
     `${import.meta.env.VITE_QUOTES_URL}?` +
     new URLSearchParams({
