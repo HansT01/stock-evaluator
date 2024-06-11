@@ -1,6 +1,6 @@
 import { useSearchParams } from '@solidjs/router'
 import { Component, For, Show, createEffect, createSignal, onMount } from 'solid-js'
-import { YFinanceData, YFinanceQuote, fetchYFinanceData, fetchYFinanceQuotes } from '~/rpc/yfinance'
+import { YFinanceData, YFinanceQuote, fetchYFinanceData, fetchYFinanceQuotes } from '~/server/yfinance'
 import { cn } from '../utils/cn'
 import { LoaderIcon, SearchIcon } from './icons'
 

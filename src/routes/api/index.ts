@@ -1,6 +1,6 @@
 import { APIEvent } from '@solidjs/start/server'
 import dayjs from 'dayjs'
-import { fetchYFinanceCookie, fetchYFinanceCrumb, fetchYFinanceData } from '~/rpc/yfinance'
+import { fetchYFinanceCookie, fetchYFinanceCrumb, fetchYFinanceData } from '~/server/yfinance'
 import { calculateDCF, fitExponential } from '~/utils/calculate'
 
 export const GET = async (props: APIEvent) => {
