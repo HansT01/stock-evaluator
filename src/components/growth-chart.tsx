@@ -1,8 +1,18 @@
-import { CategoryScale, Chart, Colors, Legend, LineController, LineElement, LinearScale, PointElement } from 'chart.js'
+import {
+  CategoryScale,
+  Chart,
+  Colors,
+  Legend,
+  LineController,
+  LineElement,
+  LinearScale,
+  PointElement,
+  Tooltip,
+} from 'chart.js'
 import { Component, createEffect, onCleanup, onMount } from 'solid-js'
 import { formatNum } from '~/utils/format'
 
-Chart.register(LineController, LineElement, LinearScale, CategoryScale, PointElement, Colors, Legend)
+Chart.register(CategoryScale, Colors, Legend, LineController, LineElement, LinearScale, PointElement, Tooltip)
 
 interface GrowthChartProps {
   label: string
