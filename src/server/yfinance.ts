@@ -33,6 +33,7 @@ const fetchTimeSeries = async (ticker: string) => {
     'annualTotalRevenue',
     'annualNetIncome',
     'annualCashDividendsPaid',
+    'annualPreferredStockDividends',
     'annualFreeCashFlow',
     'annualOrdinarySharesNumber',
     'annualTotalDebt',
@@ -48,6 +49,7 @@ const fetchTimeSeries = async (ticker: string) => {
     'quarterlyTotalLiabilitiesNetMinorityInterest',
     'quarterlyMinorityInterest',
     'quarterlyPreferredStock',
+    'quarterlyPreferredStockDividends',
   ]
 
   const url =
@@ -180,11 +182,13 @@ export const fetchYFinanceData = async (ticker: string, cookie?: string, crumb?:
   const revenues = fiscalYearEnds.map((year) => timeSeries[year].annualTotalRevenue ?? null)
   const earnings = fiscalYearEnds.map((year) => timeSeries[year].annualNetIncome ?? null)
   const dividends = fiscalYearEnds.map((year) => {
-    const dividends = timeSeries[year].annualCashDividendsPaid
-    if (dividends === undefined) {
+    let cashDividends = timeSeries[year].annualCashDividendsPaid 
+    if (cashDividends === undefined) {
       return null
     }
-    return Math.abs(dividends)
+    const preferredDividends = Math.abs(timeSeries[year].annualPreferredStockDividends ?? 0)
+    const commonDividends = Math.abs(cashDividends) - preferredDividends
+    return commonDividends
   })
   const freeCashFlows = fiscalYearEnds.map((year) => timeSeries[year].annualFreeCashFlow ?? null)
 
