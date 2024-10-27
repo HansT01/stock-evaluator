@@ -125,6 +125,7 @@ const fetchQuoteSummary = async (ticker: string, cookie?: string, crumb?: string
     website: summaries['assetProfile']['website'] as string,
     currency: summaries['summaryDetail']['currency'] as string,
     sharePrice: summaries['financialData']['currentPrice'] as number,
+    financialCurrency: summaries['financialData']['financialCurrency'] as string,
   }
   return parsed
 }
@@ -136,6 +137,7 @@ export interface YFinanceData {
   industry: string
   website: string
   currency: string
+  financialCurrency: string
   sharePrice: number
   marketCap: number
   enterpriseValue: number
