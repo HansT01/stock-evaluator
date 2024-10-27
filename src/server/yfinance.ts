@@ -1,9 +1,10 @@
 'use server'
 
+import { getEnv } from './env'
 import { FinancialStatementType } from './yfinance-statement-types'
 
 export const fetchYFinanceCookie = async () => {
-  const res = await fetch(import.meta.env.VITE_COOKIE_URL, {
+  const res = await fetch(getEnv().COOKIE_URL, {
     headers: {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0',
     },
@@ -13,7 +14,7 @@ export const fetchYFinanceCookie = async () => {
 }
 
 export const fetchYFinanceCrumb = async (cookie: string) => {
-  const res = await fetch(import.meta.env.VITE_CRUMB_URL, {
+  const res = await fetch(getEnv().CRUMB_URL, {
     headers: {
       'Cookie': cookie,
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0',
@@ -53,7 +54,7 @@ const fetchTimeSeries = async (ticker: string) => {
   ]
 
   const url =
-    `${import.meta.env.VITE_TIMESERIES_URL}/${ticker}?` +
+    `${getEnv().TIMESERIES_URL}/${ticker}?` +
     new URLSearchParams({
       'type': types.join(','),
       'period1': Math.floor(period1).toString(),
@@ -99,7 +100,7 @@ const fetchQuoteSummary = async (ticker: string, cookie?: string, crumb?: string
   cookie ??= await fetchYFinanceCookie()
   crumb ??= await fetchYFinanceCrumb(cookie)
   const url =
-    `${import.meta.env.VITE_QUOTESUMMARY_URL}/${ticker}?` +
+    `${getEnv().QUOTESUMMARY_URL}/${ticker}?` +
     new URLSearchParams({
       'modules': modules.join(','),
       'formatted': 'false',
@@ -184,7 +185,7 @@ export const fetchYFinanceData = async (ticker: string, cookie?: string, crumb?:
   const revenues = fiscalYearEnds.map((year) => timeSeries[year].annualTotalRevenue ?? null)
   const earnings = fiscalYearEnds.map((year) => timeSeries[year].annualNetIncome ?? null)
   const dividends = fiscalYearEnds.map((year) => {
-    let cashDividends = timeSeries[year].annualCashDividendsPaid 
+    let cashDividends = timeSeries[year].annualCashDividendsPaid
     if (cashDividends === undefined) {
       return null
     }
@@ -221,7 +222,7 @@ export interface YFinanceQuote {
 
 export const fetchYFinanceQuotes = async (query: string) => {
   const url =
-    `${import.meta.env.VITE_QUOTES_URL}?` +
+    `${getEnv().QUOTES_URL}?` +
     new URLSearchParams({
       'q': query,
       'lang': 'en-US',
