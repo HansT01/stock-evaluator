@@ -1,5 +1,0 @@
-#:schema node_modules/wrangler/config-schema.json
-name = "stock-evaluator"
-compatibility_date = "2024-07-01"
-compatibility_flags = ["nodejs_compat"]
-pages_build_output_dir = "./dist"
