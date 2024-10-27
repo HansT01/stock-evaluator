@@ -16,7 +16,7 @@ interface EvaluatorConfigs {
   terminalGrowth: number
   customGrowth: number
   growthIndicator: 'revenues' | 'earnings' | 'dividends' | 'freeCashFlows' | 'custom'
-  investmentOption: 'enterpriseValue' | 'marketCap'
+  investmentOption: 'adjustedEnterpriseValue' | 'enterpriseValue' | 'marketCap'
   includeDividends: boolean
 }
 
@@ -26,7 +26,7 @@ const defaultConfigs: EvaluatorConfigs = {
   terminalGrowth: 0.02,
   customGrowth: 0,
   growthIndicator: 'revenues',
-  investmentOption: 'enterpriseValue',
+  investmentOption: 'adjustedEnterpriseValue',
   includeDividends: true,
 }
 
@@ -289,6 +289,21 @@ const StockEvaluator = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
+                <TableRow>
+                  <TableCell>Adjusted enterprise value</TableCell>
+                  <TableCell class='w-[104px]'>{formatNum(YFData()?.adjustedEnterpriseValue)}</TableCell>
+                  <TableCell class='relative w-[41px]'>
+                    <button
+                      onClick={() => setConfigs({ ...configs(), investmentOption: 'adjustedEnterpriseValue' })}
+                      class={cn(
+                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        {
+                          'bg-primary': configs().investmentOption === 'adjustedEnterpriseValue',
+                        },
+                      )}
+                    />
+                  </TableCell>
+                </TableRow>
                 <TableRow>
                   <TableCell>Enterprise value</TableCell>
                   <TableCell class='w-[104px]'>{formatNum(YFData()?.enterpriseValue)}</TableCell>

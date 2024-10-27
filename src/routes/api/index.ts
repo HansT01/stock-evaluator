@@ -23,17 +23,15 @@ export const GET = async (props: APIEvent) => {
     const { base } = fitExponential(years, data.revenues)
     const growth = base - 1
     const dividendYield =
-      data.dividends.reduce<number>((acc, val) => acc + (val ?? 0), 0) / data.dividends.length / data.enterpriseValue
+      data.dividends.reduce<number>((acc, val) => acc + (val ?? 0), 0) /
+      data.dividends.length /
+      data.adjustedEnterpriseValue
     const projectedGrowth = growth + dividendYield
 
     const intrinsicValue = calculateDCF(baseFCF, discountRate, growingYears, projectedGrowth, terminalGrowth)
-    const valueRating = intrinsicValue / data.enterpriseValue
+    const valueRating = intrinsicValue / data.adjustedEnterpriseValue
     return {
-      ticker: ticker,
-      currency: data.currency,
-      sharePrice: data.sharePrice,
-      marketCap: data.marketCap,
-      enterpriseValue: data.enterpriseValue,
+      ...data,
       valueRating: valueRating,
     }
   }

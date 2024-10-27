@@ -1,7 +1,5 @@
 'use server'
 
-import dayjs, { Dayjs } from 'dayjs'
-import { getRequestEvent } from 'solid-js/web'
 import { FinancialStatementType } from './yfinance-statement-types'
 
 export const fetchYFinanceCookie = async () => {
@@ -40,10 +38,16 @@ const fetchTimeSeries = async (ticker: string) => {
     'annualTotalDebt',
     'annualCashAndCashEquivalents',
     'annualOtherShortTermInvestments',
+    'annualTotalLiabilitiesNetMinorityInterest',
+    'annualMinorityInterest',
+    'annualPreferredStock',
     'quarterlyOrdinarySharesNumber',
     'quarterlyTotalDebt',
     'quarterlyCashAndCashEquivalents',
     'quarterlyOtherShortTermInvestments',
+    'quarterlyTotalLiabilitiesNetMinorityInterest',
+    'quarterlyMinorityInterest',
+    'quarterlyPreferredStock',
   ]
 
   const url =
@@ -133,6 +137,7 @@ export interface YFinanceData {
   sharePrice: number
   marketCap: number
   enterpriseValue: number
+  adjustedEnterpriseValue: number
   fiscalYearEnds: string[]
   revenues: (number | null)[]
   earnings: (number | null)[]
@@ -140,18 +145,7 @@ export interface YFinanceData {
   freeCashFlows: (number | null)[]
 }
 
-const rateLimiter: any = globalThis
-
 export const fetchYFinanceData = async (ticker: string, cookie?: string, crumb?: string) => {
-  const addr = getRequestEvent()?.clientAddress
-  if (addr !== undefined) {
-    const lastInvocation: Dayjs | undefined = rateLimiter[addr]
-    if (lastInvocation !== undefined && lastInvocation > dayjs().subtract(1, 'seconds')) {
-      throw new Error(`Client: ${addr} is being rate limited`)
-    }
-    rateLimiter[addr] = dayjs()
-  }
-
   const [timeSeries, quoteSummary] = await Promise.all([
     fetchTimeSeries(ticker),
     fetchQuoteSummary(ticker, cookie, crumb),
@@ -161,12 +155,25 @@ export const fetchYFinanceData = async (ticker: string, cookie?: string, crumb?:
 
   const recentQuarter = timeSeries[dates[dates.length - 1]]
   const recentYearEnd = timeSeries[fiscalYearEnds[fiscalYearEnds.length - 1]]
+
   const marketCap =
     quoteSummary.sharePrice *
     (recentQuarter.quarterlyOrdinarySharesNumber ?? recentYearEnd.annualOrdinarySharesNumber ?? NaN)
+
   const enterpriseValue =
     marketCap +
-    (recentQuarter.quarterlyTotalDebt ?? recentYearEnd.annualTotalDebt ?? 0) -
+    (recentQuarter.quarterlyTotalDebt ?? recentYearEnd.annualTotalDebt ?? 0) +
+    (recentQuarter.quarterlyPreferredStock ?? recentYearEnd.annualPreferredStock ?? 0) +
+    (recentQuarter.quarterlyMinorityInterest ?? recentYearEnd.annualMinorityInterest ?? 0) -
+    (recentQuarter.quarterlyCashAndCashEquivalents ?? recentYearEnd.annualCashAndCashEquivalents ?? 0)
+
+  const adjustedEnterpriseValue =
+    marketCap +
+    (recentQuarter.quarterlyTotalLiabilitiesNetMinorityInterest ??
+      recentYearEnd.annualTotalLiabilitiesNetMinorityInterest ??
+      0) +
+    (recentQuarter.quarterlyPreferredStock ?? recentYearEnd.annualPreferredStock ?? 0) +
+    (recentQuarter.quarterlyMinorityInterest ?? recentYearEnd.annualMinorityInterest ?? 0) -
     (recentQuarter.quarterlyCashAndCashEquivalents ?? recentYearEnd.annualCashAndCashEquivalents ?? 0) -
     (recentQuarter.quarterlyOtherShortTermInvestments ?? recentYearEnd.annualOtherShortTermInvestments ?? 0)
 
@@ -185,6 +192,7 @@ export const fetchYFinanceData = async (ticker: string, cookie?: string, crumb?:
     ...quoteSummary,
     marketCap,
     enterpriseValue,
+    adjustedEnterpriseValue,
     fiscalYearEnds,
     revenues,
     earnings,
