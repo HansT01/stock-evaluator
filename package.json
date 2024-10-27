@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "vinxi dev",
     "build": "vinxi build",
-    "start": "vinxi start"
+    "start": "vinxi start",
+    "preview": "copy .env .dev.vars && pnpm build && pnpm dlx wrangler pages dev"
   },
   "dependencies": {
     "@solidjs/router": "^0.14.10",

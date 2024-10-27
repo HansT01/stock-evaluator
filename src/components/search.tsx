@@ -11,7 +11,7 @@ interface SearchProps {
 
 export const YFinanceSearch: Component<SearchProps> = (props) => {
   const [searchParams, setSearchParams] = useSearchParams()
-  const [ticker, setTicker] = createSignal(searchParams.ticker ?? '')
+  const [ticker, setTicker] = createSignal((searchParams.ticker as string) ?? '')
   const [quotes, setQuotes] = createSignal<YFinanceQuote[]>([])
   const [isFocused, setIsFocused] = createSignal(false)
   const [isFetchingQuotes, setIsFetchingQuotes] = createSignal(false)

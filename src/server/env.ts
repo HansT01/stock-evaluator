@@ -1,4 +1,4 @@
-import { getEvent } from 'vinxi/http'
+import { getRequestEvent } from 'solid-js/web'
 
 interface EnvironmentVariables {
   COOKIE_URL: string
@@ -11,5 +11,5 @@ interface EnvironmentVariables {
 }
 
 export const getEnv = (): EnvironmentVariables => {
-  return import.meta.env.PROD ? getEvent().context.cloudflare.env : process.env
+  return import.meta.env.PROD ? getRequestEvent()!.nativeEvent.context.cloudflare.env : process.env
 }
