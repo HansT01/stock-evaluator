@@ -1,6 +1,8 @@
 'use server'
 
 import { getEnv } from './env'
+import { convertCurrency } from './exchange-rate'
+import { CurrencyCode } from './exchange-rate-types'
 import { FinancialStatementType } from './yfinance-statement-types'
 
 export const fetchYFinanceCookie = async () => {
@@ -124,9 +126,9 @@ const fetchQuoteSummary = async (ticker: string, cookie?: string, crumb?: string
     summary: summaries['assetProfile']['longBusinessSummary'] as string,
     industry: summaries['assetProfile']['industry'] as string,
     website: summaries['assetProfile']['website'] as string,
-    currency: summaries['summaryDetail']['currency'] as string,
     sharePrice: summaries['financialData']['currentPrice'] as number,
-    financialCurrency: summaries['financialData']['financialCurrency'] as string,
+    currency: summaries['summaryDetail']['currency'] as CurrencyCode,
+    financialCurrency: summaries['financialData']['financialCurrency'] as CurrencyCode,
   }
   return parsed
 }
@@ -137,9 +139,9 @@ export interface YFinanceData {
   summary: string
   industry: string
   website: string
-  currency: string
-  financialCurrency: string
   sharePrice: number
+  currency: CurrencyCode
+  financialCurrency: CurrencyCode
   marketCap: number
   enterpriseValue: number
   adjustedEnterpriseValue: number
@@ -161,8 +163,14 @@ export const fetchYFinanceData = async (ticker: string, cookie?: string, crumb?:
   const recentQuarter = timeSeries[dates[dates.length - 1]]
   const recentYearEnd = timeSeries[fiscalYearEnds[fiscalYearEnds.length - 1]]
 
+  const convertedSharePrice = await convertCurrency(
+    quoteSummary.sharePrice,
+    quoteSummary.currency,
+    quoteSummary.financialCurrency,
+  )
+
   const marketCap =
-    quoteSummary.sharePrice *
+    convertedSharePrice *
     (recentQuarter.quarterlyOrdinarySharesNumber ?? recentYearEnd.annualOrdinarySharesNumber ?? NaN)
 
   const enterpriseValue =

@@ -7,6 +7,7 @@ interface EnvironmentVariables {
   QUOTESUMMARY_URL: string
   QUOTES_URL: string
   TIMESERIES_URL: string
+  EXCHANGE_RATE_API_KEY: string
 }
 
 export const getEnv = (): EnvironmentVariables => {
