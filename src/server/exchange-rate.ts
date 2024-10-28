@@ -37,6 +37,9 @@ const validateExchangeRates = async () => {
 }
 
 export const convertCurrency = async (amount: number, from: CurrencyCode, to: CurrencyCode) => {
+  if (from === to) {
+    return amount
+  }
   await validateExchangeRates()
   const app = globalThis
   const rates = app.exchangeRate!.rates
