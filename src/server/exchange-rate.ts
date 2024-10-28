@@ -45,3 +45,16 @@ export const convertCurrency = async (amount: number, from: CurrencyCode, to: Cu
   const rates = app.exchangeRate!.rates
   return (amount / rates[from]) * rates[to]
 }
+
+export const testCache = async () => {
+  const app = globalThis
+  if (app.exchangeRate === undefined) {
+    await updateExchangeRates()
+    return 'Exchange rate was undefined and is now updated'
+  }
+  if (dayjs().isAfter(app.exchangeRate!.nextUpdateTimestamp)) {
+    await updateExchangeRates()
+    return 'Exchange rate expired and is now updated'
+  }
+  return `Exchange rate is valid until ${app.exchangeRate.nextUpdateTimestamp}`
+}
