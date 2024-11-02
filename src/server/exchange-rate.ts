@@ -1,11 +1,10 @@
 'use server'
 
-import dayjs, { Dayjs } from 'dayjs'
 import { getEnv } from './env'
 import { CurrencyCode } from './exchange-rate-types'
 
 interface ExchangeRateInstance {
-  nextUpdateTimestamp: Dayjs
+  nextUpdateTimestamp: Date
   rates: Record<CurrencyCode, number>
 }
 
@@ -27,7 +26,7 @@ const updateExchangeRate = async () => {
       }
       const raw = await res.json()
       app.exchangeRate = {
-        nextUpdateTimestamp: dayjs.unix(raw['time_next_update_unix']),
+        nextUpdateTimestamp: new Date(raw['time_next_update_unix'] * 1000),
         rates: raw['conversion_rates'],
       }
     } finally {
@@ -39,7 +38,7 @@ const updateExchangeRate = async () => {
 
 const validateExchangeRate = async () => {
   const app = globalThis
-  if (app.exchangeRate === undefined || dayjs().isAfter(app.exchangeRate!.nextUpdateTimestamp)) {
+  if (app.exchangeRate === undefined || new Date() > app.exchangeRate!.nextUpdateTimestamp) {
     await updateExchangeRate()
   }
 }

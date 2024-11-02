@@ -1,5 +1,4 @@
 import { APIEvent } from '@solidjs/start/server'
-import dayjs from 'dayjs'
 import { fetchYFinanceCookie, fetchYFinanceCrumb, fetchYFinanceData } from '~/server/yfinance'
 import { calculateDCF, fitExponential } from '~/utils/calculate'
 
@@ -19,7 +18,7 @@ export const GET = async (props: APIEvent) => {
       data.freeCashFlows.reduce<number>((acc, val) => (val !== null ? acc + val : acc), 0) /
       data.freeCashFlows.filter((val) => val !== null).length
 
-    const years = data.fiscalYearEnds.map((date) => dayjs(date).year())
+    const years = data.fiscalYearEnds.map((date) => date.getUTCFullYear())
     const { base } = fitExponential(years, data.revenues)
     const growth = base - 1
     const dividendYield =

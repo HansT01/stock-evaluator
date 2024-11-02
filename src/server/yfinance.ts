@@ -145,7 +145,7 @@ export interface YFinanceData {
   marketCap: number
   enterpriseValue: number
   adjustedEnterpriseValue: number
-  fiscalYearEnds: string[]
+  fiscalYearEnds: Date[]
   revenues: (number | null)[]
   earnings: (number | null)[]
   dividends: (number | null)[]
@@ -208,7 +208,7 @@ export const fetchYFinanceData = async (ticker: string, cookie?: string, crumb?:
     marketCap,
     enterpriseValue,
     adjustedEnterpriseValue,
-    fiscalYearEnds,
+    fiscalYearEnds: fiscalYearEnds.map((date) => new Date(date)),
     revenues,
     earnings,
     dividends,

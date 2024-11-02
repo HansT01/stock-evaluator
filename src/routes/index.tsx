@@ -1,4 +1,3 @@
-import dayjs from 'dayjs'
 import { Show, createEffect, createMemo, createSignal, onMount } from 'solid-js'
 import { getRequestEvent } from 'solid-js/web'
 import { YFinanceSearch } from '~/components/search'
@@ -79,7 +78,7 @@ const StockEvaluator = () => {
     if (data === null) {
       return NaN
     }
-    const xData = data.fiscalYearEnds.map((date) => dayjs(date).year())
+    const xData = data.fiscalYearEnds.map((date) => new Date(date).getUTCFullYear())
     const yData = data[indicator]
     return fitExponential(xData, yData).base - 1
   }
@@ -126,7 +125,7 @@ const StockEvaluator = () => {
       return null
     }
     const label = `Historical ${formatCamelCase(indicator)}`
-    const xData = data.fiscalYearEnds.map((date) => dayjs(date).year())
+    const xData = data.fiscalYearEnds.map((date) => new Date(date).getUTCFullYear())
     const yData = [...data[indicator]]
     const { constant, base } = fitExponential(xData, yData)
     for (let i = 0; i < configs().growingYears; i++) {
