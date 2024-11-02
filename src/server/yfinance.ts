@@ -256,7 +256,7 @@ export const fetchYFinanceQuotes = async (query: string) => {
 
 export interface PriceHistory {
   ticker: string
-  currency: string
+  currency: CurrencyCode
   timestamps: number[]
   prices: number[]
 }
@@ -293,7 +293,7 @@ export const fetchPriceHistory = async (
 
   const parsed = {
     ticker: raw.chart.result[0].meta.symbol as string,
-    currency: raw.chart.result[0].meta.currency as string,
+    currency: raw.chart.result[0].meta.currency as CurrencyCode,
     timestamps: raw.chart.result[0].timestamp as number[],
     prices: raw.chart.result[0].indicators.quote[0].close as number[],
   }
