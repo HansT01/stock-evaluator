@@ -3,7 +3,7 @@
 import { getEnv } from './env'
 import { convertCurrency } from './exchange-rate'
 import { CurrencyCode } from './exchange-rate-types'
-import { FinancialStatementType } from './yfinance-statement-types'
+import { FinancialStatementType, TimeSeriesInterval } from './yfinance-statement-types'
 
 export const fetchYFinanceCookie = async () => {
   const res = await fetch(getEnv().COOKIE_URL, {
@@ -252,4 +252,50 @@ export const fetchYFinanceQuotes = async (query: string) => {
 
   const { quotes } = raw as { quotes: YFinanceQuote[] }
   return quotes.filter((quote) => quote.quoteType === 'EQUITY' && quote.industry !== undefined).slice(0, 5)
+}
+
+export interface PriceHistory {
+  ticker: string
+  currency: string
+  timestamps: number[]
+  prices: number[]
+}
+
+export const fetchPriceHistory = async (
+  ticker: string,
+  startTimestamp: number,
+  endTimestamp: number,
+  interval: TimeSeriesInterval = '1d',
+  cookie?: string,
+  crumb?: string,
+) => {
+  cookie ??= await fetchYFinanceCookie()
+  crumb ??= await fetchYFinanceCrumb(cookie)
+  const url =
+    `${getEnv().PRICEHISTORY_URL}?` +
+    new URLSearchParams({
+      'period1': startTimestamp.toString(),
+      'period2': endTimestamp.toString(),
+      'interval': interval,
+      'includePrePost': 'False',
+      'events': 'div%2Csplits%2CcapitalGains',
+      'crumb': crumb,
+    })
+  const res = await fetch(url, {
+    headers: {
+      'Cookie': cookie,
+    },
+  })
+  if (!res.ok) {
+    throw new Error(`Status: ${res.status}; Body: ${await res.text()}`)
+  }
+  const raw = await res.json()
+
+  const parsed = {
+    ticker: raw.chart.result[0].meta.symbol as string,
+    currency: raw.chart.result[0].meta.currency as string,
+    timestamps: raw.chart.result[0].timestamp as number[],
+    prices: raw.chart.result[0].indicators.quote[0].close as number[],
+  }
+  return parsed
 }
