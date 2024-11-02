@@ -272,7 +272,7 @@ export const fetchPriceHistory = async (
   cookie ??= await fetchYFinanceCookie()
   crumb ??= await fetchYFinanceCrumb(cookie)
   const url =
-    `${getEnv().PRICEHISTORY_URL}?` +
+    `${getEnv().PRICEHISTORY_URL}/${ticker}?` +
     new URLSearchParams({
       'period1': startTimestamp.toString(),
       'period2': endTimestamp.toString(),
