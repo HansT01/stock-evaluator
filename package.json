@@ -8,6 +8,7 @@
     "preview": "copy .env .dev.vars && pnpm build && pnpm dlx wrangler pages dev"
   },
   "dependencies": {
+    "@fontsource/inter": "^5.1.0",
     "@solidjs/router": "^0.14.10",
     "@solidjs/start": "1.0.9",
     "autoprefixer": "^10.4.20",
