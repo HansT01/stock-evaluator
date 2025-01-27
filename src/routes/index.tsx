@@ -67,7 +67,7 @@ const StockEvaluator = () => {
       return NaN
     }
     const mean = data.dividends.reduce<number>((acc, val) => acc + (val ?? 0), 0) / data.dividends.length
-    return mean / data[configs().investmentOption]
+    return mean / data.marketCap
   })
 
   const calculateGrowth = (indicator: EvaluatorConfigs['growthIndicator']) => {
