@@ -127,6 +127,7 @@ const fetchQuoteSummary = async (ticker: string, cookie?: string, crumb?: string
     industry: summaries['assetProfile']['industry'] as string,
     website: summaries['assetProfile']['website'] as string,
     sharePrice: summaries['financialData']['currentPrice'] as number,
+    marketCap: summaries['summaryDetail']['marketCap'] as number,
     currency: summaries['summaryDetail']['currency'] as CurrencyCode,
     financialCurrency: summaries['financialData']['financialCurrency'] as CurrencyCode,
   }
@@ -163,15 +164,11 @@ export const fetchYFinanceData = async (ticker: string, cookie?: string, crumb?:
   const recentQuarter = timeSeries[dates[dates.length - 1]]
   const recentYearEnd = timeSeries[fiscalYearEnds[fiscalYearEnds.length - 1]]
 
-  const convertedSharePrice = await convertCurrency(
-    quoteSummary.sharePrice,
-    quoteSummary.currency,
-    quoteSummary.financialCurrency,
+  const marketCap = Math.max(
+    await convertCurrency(quoteSummary.marketCap, quoteSummary.currency, quoteSummary.financialCurrency),
+    (await convertCurrency(quoteSummary.sharePrice, quoteSummary.currency, quoteSummary.financialCurrency)) *
+      (recentQuarter.quarterlyOrdinarySharesNumber ?? recentYearEnd.annualOrdinarySharesNumber ?? NaN),
   )
-
-  const marketCap =
-    convertedSharePrice *
-    (recentQuarter.quarterlyOrdinarySharesNumber ?? recentYearEnd.annualOrdinarySharesNumber ?? NaN)
 
   const enterpriseValue =
     marketCap +

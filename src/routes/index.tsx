@@ -170,10 +170,7 @@ const StockEvaluator = () => {
         </div>
         <div class='flex flex-wrap gap-4'>
           <div class='rounded-lg border border-primary bg-background px-4 py-2 font-mono text-background-fg'>
-            Currency: {YFData()?.currency ?? 'N/A'}
-          </div>
-          <div class='rounded-lg border border-primary bg-background px-4 py-2 font-mono text-background-fg'>
-            Share price: {YFData()?.sharePrice ?? NaN}
+            Share price: {YFData()?.sharePrice ?? NaN} {YFData()?.currency ?? 'N/A'}
           </div>
           <button
             onClick={() => document.getElementById('value-rating')?.scrollIntoView()}
