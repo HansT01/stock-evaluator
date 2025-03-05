@@ -116,37 +116,37 @@ export const YFinanceSearch: Component<SearchProps> = (props) => {
           onChange={(e) => setTicker(e.target.value)}
           onKeyDown={handleKeyDown}
           onInput={handleInput}
-          class='min-w-0 max-w-full grow rounded-s-full border border-primary bg-background px-4 py-2 text-background-fg'
+          class='border-primary bg-background text-background-fg max-w-full min-w-0 grow rounded-s-full border px-4 py-2'
         />
         <button
           type='submit'
           disabled={isFetchingData()}
           onClick={handleSearch}
-          class='flex w-[72px] max-w-full items-center justify-center rounded-e-full bg-primary px-4 py-2 text-primary-fg'
+          class='bg-primary text-primary-fg flex w-[72px] max-w-full cursor-pointer items-center justify-center rounded-e-full px-4 py-2'
         >
           {isFetchingData() ? <LoaderIcon class='animate-spin' size={20} /> : <SearchIcon size={20} />}
         </button>
       </form>
 
       <Show when={isFocused()}>
-        <div class='absolute left-0 right-0 mt-4 w-full'>
+        <div class='absolute right-0 left-0 mt-4 w-full'>
           <Show
             when={quotes().length !== 0}
             fallback={
-              <div class='flex min-h-[68px] items-center justify-center rounded-lg border border-primary bg-background text-background-fg'>
+              <div class='border-primary bg-background text-background-fg flex min-h-[68px] items-center justify-center rounded-lg border'>
                 <Show when={isFetchingQuotes()} fallback={<div>No matching results.</div>}>
                   <LoaderIcon class='animate-spin' />
                 </Show>
               </div>
             }
           >
-            <div class='flex flex-col items-stretch divide-y divide-primary overflow-hidden rounded-lg border border-primary bg-background text-background-fg'>
+            <div class='divide-primary border-primary bg-background text-background-fg flex flex-col items-stretch divide-y overflow-hidden rounded-lg border'>
               <For each={quotes()}>
                 {(quote) => (
                   <button
                     tabIndex={1}
                     onClick={() => handleSelectQuote(quote)}
-                    class='flex flex-col items-stretch px-3 py-2 text-left hover:bg-secondary hover:text-secondary-fg focus:bg-secondary focus:text-secondary-fg'
+                    class='hover:bg-secondary hover:text-secondary-fg focus:bg-secondary focus:text-secondary-fg flex cursor-pointer flex-col items-stretch px-3 py-2 text-left'
                   >
                     <div class='line-clamp-1 text-lg font-light'>{quote.longname}</div>
                     <div class='flex flex-wrap'>

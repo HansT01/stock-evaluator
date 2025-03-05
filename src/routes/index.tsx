@@ -141,45 +141,45 @@ const StockEvaluator = () => {
   })
 
   return (
-    <main class='container mx-auto flex min-h-svh max-w-screen-lg flex-col gap-8 bg-accent p-4 text-accent-fg sm:p-8'>
+    <main class='bg-accent text-accent-fg container mx-auto flex min-h-svh max-w-(--breakpoint-lg) flex-col gap-8 p-4 sm:p-8'>
       <YFinanceSearch onSuccess={setYFData} onError={console.error} />
       <div class='flex flex-col gap-8'>
         <div class='flex min-h-[120px] flex-col px-4'>
           <div class='text-6xl font-thin'>{YFData()?.name}</div>
           <div class='mt-2 text-xl font-light'>{YFData()?.industry}</div>
           <div class='font-semibold'>
-            <a href={YFData()?.website} target='_blank' class='underline hover:text-secondary'>
+            <a href={YFData()?.website} target='_blank' class='hover:text-secondary underline'>
               {YFData()?.website}
             </a>
           </div>
         </div>
-        <div class='flex min-h-[122px] flex-col items-center gap-2 rounded-lg border border-primary bg-background px-4 py-2 text-background-fg'>
+        <div class='border-primary bg-background text-background-fg flex min-h-[122px] flex-col items-center gap-2 rounded-lg border px-4 py-2'>
           <p
             class={cn(
-              'line-clamp-3 grow bg-gradient-to-b from-background-fg to-transparent bg-clip-text text-left text-transparent',
+              'from-background-fg line-clamp-3 grow bg-linear-to-b to-transparent bg-clip-text text-left text-transparent',
               {
-                'line-clamp-none text-background-fg': isReadMore(),
+                'text-background-fg line-clamp-none': isReadMore(),
               },
             )}
           >
             {YFData()?.summary}
           </p>
-          <button onClick={() => setIsReadMore(!isReadMore())} class='font-semibold underline hover:text-secondary'>
+          <button onClick={() => setIsReadMore(!isReadMore())} class='hover:text-secondary font-semibold underline'>
             {isReadMore() ? 'Read less' : 'Read more'}
           </button>
         </div>
         <div class='flex flex-wrap gap-4'>
-          <div class='rounded-lg border border-primary bg-background px-4 py-2 font-mono text-background-fg'>
+          <div class='border-primary bg-background text-background-fg rounded-lg border px-4 py-2 font-mono'>
             Share price: {YFData()?.sharePrice ?? NaN} {YFData()?.currency ?? 'N/A'}
           </div>
           <button
             onClick={() => document.getElementById('value-rating')?.scrollIntoView()}
-            class='rounded-lg border border-primary bg-primary px-4 py-2 font-mono text-primary-fg'
+            class='border-primary bg-primary text-primary-fg cursor-pointer rounded-lg border px-4 py-2 font-mono'
           >
             Value rating: {formatPct(valueRating(), true)}
           </button>
         </div>
-        <div class='min-h-[400px] w-full rounded-lg border border-primary bg-background px-4 py-2 text-background-fg'>
+        <div class='border-primary bg-background text-background-fg min-h-[400px] w-full rounded-lg border px-4 py-2'>
           <Show when={getChartProps()}>{(props) => <GrowthChart {...props()} />}</Show>
         </div>
         <div class='flex flex-col gap-8 md:flex-row'>
@@ -198,7 +198,7 @@ const StockEvaluator = () => {
                     <button
                       onClick={() => setConfigs({ ...configs(), growthIndicator: 'revenues' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'bg-secondary absolute top-1/2 left-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-lg',
                         {
                           'bg-primary': configs().growthIndicator === 'revenues',
                         },
@@ -213,7 +213,7 @@ const StockEvaluator = () => {
                     <button
                       onClick={() => setConfigs({ ...configs(), growthIndicator: 'earnings' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'bg-secondary absolute top-1/2 left-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-lg',
                         {
                           'bg-primary': configs().growthIndicator === 'earnings',
                         },
@@ -228,7 +228,7 @@ const StockEvaluator = () => {
                     <button
                       onClick={() => setConfigs({ ...configs(), growthIndicator: 'dividends' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'bg-secondary absolute top-1/2 left-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-lg',
                         {
                           'bg-primary': configs().growthIndicator === 'dividends',
                         },
@@ -243,7 +243,7 @@ const StockEvaluator = () => {
                     <button
                       onClick={() => setConfigs({ ...configs(), growthIndicator: 'freeCashFlows' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'bg-secondary absolute top-1/2 left-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-lg',
                         {
                           'bg-primary': configs().growthIndicator === 'freeCashFlows',
                         },
@@ -253,7 +253,7 @@ const StockEvaluator = () => {
                 </TableRow>
                 <TableRow>
                   <TableCell>Custom growth</TableCell>
-                  <TableCell class='w-[104px] bg-secondary text-secondary-fg'>
+                  <TableCell class='bg-secondary text-secondary-fg w-[104px]'>
                     <input
                       type='text'
                       pattern='[0-9]+([\.,][0-9]+)?'
@@ -261,14 +261,14 @@ const StockEvaluator = () => {
                       value={formatPct(configs().customGrowth)}
                       onFocusIn={(e) => e.target.select()}
                       onFocusOut={(e) => setConfigs({ ...configs(), customGrowth: parseFloat(e.target.value) / 100 })}
-                      class='h-full w-full min-w-0 border-0 bg-secondary text-secondary-fg'
+                      class='bg-secondary text-secondary-fg h-full w-full min-w-0 border-0'
                     />
                   </TableCell>
                   <TableCell class='relative w-[41px]'>
                     <button
                       onClick={() => setConfigs({ ...configs(), growthIndicator: 'custom' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'bg-secondary absolute top-1/2 left-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-lg',
                         {
                           'bg-primary': configs().growthIndicator === 'custom',
                         },
@@ -292,7 +292,7 @@ const StockEvaluator = () => {
                     <button
                       onClick={() => setConfigs({ ...configs(), investmentOption: 'adjustedEnterpriseValue' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'bg-secondary absolute top-1/2 left-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-lg',
                         {
                           'bg-primary': configs().investmentOption === 'adjustedEnterpriseValue',
                         },
@@ -307,7 +307,7 @@ const StockEvaluator = () => {
                     <button
                       onClick={() => setConfigs({ ...configs(), investmentOption: 'enterpriseValue' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'bg-secondary absolute top-1/2 left-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-lg',
                         {
                           'bg-primary': configs().investmentOption === 'enterpriseValue',
                         },
@@ -322,7 +322,7 @@ const StockEvaluator = () => {
                     <button
                       onClick={() => setConfigs({ ...configs(), investmentOption: 'marketCap' })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'bg-secondary absolute top-1/2 left-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-lg',
                         {
                           'bg-primary': configs().investmentOption === 'marketCap',
                         },
@@ -346,7 +346,7 @@ const StockEvaluator = () => {
                     <button
                       onClick={() => setConfigs({ ...configs(), includeDividends: !configs().includeDividends })}
                       class={cn(
-                        'absolute left-1/2 top-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 rounded-lg bg-secondary',
+                        'bg-secondary absolute top-1/2 left-1/2 aspect-square w-2/3 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-lg',
                         {
                           'bg-primary': configs().includeDividends,
                         },
@@ -367,7 +367,7 @@ const StockEvaluator = () => {
               <TableBody>
                 <TableRow>
                   <TableCell>Discount rate</TableCell>
-                  <TableCell class='w-[145px] bg-secondary text-secondary-fg'>
+                  <TableCell class='bg-secondary text-secondary-fg w-[145px]'>
                     <input
                       type='text'
                       pattern='[0-9]+([\.,][0-9]+)?'
@@ -375,13 +375,13 @@ const StockEvaluator = () => {
                       value={formatPct(configs().discountRate, true)}
                       onFocusIn={(e) => e.target.select()}
                       onFocusOut={(e) => setConfigs({ ...configs(), discountRate: parseFloat(e.target.value) / 100 })}
-                      class='w-full min-w-0 bg-secondary text-secondary-fg'
+                      class='bg-secondary text-secondary-fg w-full min-w-0'
                     />
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Growing years</TableCell>
-                  <TableCell class='w-[145px] bg-secondary text-secondary-fg'>
+                  <TableCell class='bg-secondary text-secondary-fg w-[145px]'>
                     <input
                       type='text'
                       pattern='[0-9]+([\.,][0-9]+)?'
@@ -389,13 +389,13 @@ const StockEvaluator = () => {
                       value={configs().growingYears}
                       onFocusIn={(e) => e.target.select()}
                       onFocusOut={(e) => setConfigs({ ...configs(), growingYears: parseFloat(e.target.value) })}
-                      class='w-full min-w-0 bg-secondary text-secondary-fg'
+                      class='bg-secondary text-secondary-fg w-full min-w-0'
                     />
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Terminal growth</TableCell>
-                  <TableCell class='w-[145px] bg-secondary text-secondary-fg'>
+                  <TableCell class='bg-secondary text-secondary-fg w-[145px]'>
                     <input
                       type='text'
                       pattern='[0-9]+([\.,][0-9]+)?'
@@ -403,7 +403,7 @@ const StockEvaluator = () => {
                       value={formatPct(configs().terminalGrowth)}
                       onFocusIn={(e) => e.target.select()}
                       onFocusOut={(e) => setConfigs({ ...configs(), terminalGrowth: parseFloat(e.target.value) / 100 })}
-                      class='w-full min-w-0 bg-secondary text-secondary-fg'
+                      class='bg-secondary text-secondary-fg w-full min-w-0'
                     />
                   </TableCell>
                 </TableRow>
@@ -430,7 +430,7 @@ const StockEvaluator = () => {
                 </TableRow>
                 <TableRow id='value-rating'>
                   <TableCell class='bg-primary text-primary-fg'>Value rating</TableCell>
-                  <TableCell class='w-[145px] bg-primary text-primary-fg'>{formatPct(valueRating(), true)}</TableCell>
+                  <TableCell class='bg-primary text-primary-fg w-[145px]'>{formatPct(valueRating(), true)}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

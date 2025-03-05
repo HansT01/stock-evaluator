@@ -1,71 +1,17 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-@layer base {
-  .chocolate {
-    --background: #fff3e4;
-    --background-fg: #342828;
-    --accent: #d3baa6;
-    --accent-fg: #342828;
-    --primary: #342828;
-    --primary-fg: #fff3e4;
-    --secondary: #705757;
-    --secondary-fg: #fff3e4;
-  }
+@theme {
+  --font-*: initial;
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol,
+    Noto Color Emoji;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
 
-  .chocolate.dark {
-    --background: #342828;
-    --background-fg: #fff3e4;
-    --accent: #5c4545;
-    --accent-fg: #fff3e4;
-    --primary: #fff3e4;
-    --primary-fg: #342828;
-    --secondary: #d3baa6;
-    --secondary-fg: #342828;
-  }
-
-  .slate {
-    --background: #eeeeee;
-    --background-fg: #222831;
-    --accent: #a4afaf;
-    --accent-fg: #222831;
-    --primary: #222831;
-    --primary-fg: #eeeeee;
-    --secondary: #629092;
-    --secondary-fg: #eeeeee;
-  }
-
-  .slate.dark {
-    --background: #222831;
-    --background-fg: #eeeeee;
-    --accent: #31363f;
-    --accent-fg: #eeeeee;
-    --primary: #eeeeee;
-    --primary-fg: #222831;
-    --secondary: #76abae;
-    --secondary-fg: #222831;
-  }
-
-  .orchid {
-    --background: #fff9f3;
-    --background-fg: #282433;
-    --accent: #bdb4c6;
-    --accent-fg: #282433;
-    --primary: #282433;
-    --primary-fg: #fff9f3;
-    --secondary: #6d6884;
-    --secondary-fg: #fff9f3;
-  }
-
-  .orchid.dark {
-    --background: #28262e;
-    --background-fg: #fff9f3;
-    --accent: #464350;
-    --accent-fg: #fff9f3;
-    --primary: #fff9f3;
-    --primary-fg: #282433;
-    --secondary: #95919c;
-    --secondary-fg: #282433;
-  }
+  --color-background: #222831;
+  --color-background-fg: #eeeeee;
+  --color-accent: #31363f;
+  --color-accent-fg: #eeeeee;
+  --color-primary: #eeeeee;
+  --color-primary-fg: #222831;
+  --color-secondary: #76abae;
+  --color-secondary-fg: #222831;
 }
