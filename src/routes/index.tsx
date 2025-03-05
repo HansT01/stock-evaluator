@@ -164,7 +164,10 @@ const StockEvaluator = () => {
           >
             {YFData()?.summary}
           </p>
-          <button onClick={() => setIsReadMore(!isReadMore())} class='hover:text-secondary font-semibold underline'>
+          <button
+            onClick={() => setIsReadMore(!isReadMore())}
+            class='hover:text-secondary cursor-pointer font-semibold underline'
+          >
             {isReadMore() ? 'Read less' : 'Read more'}
           </button>
         </div>
