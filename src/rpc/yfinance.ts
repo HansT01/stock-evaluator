@@ -1,7 +1,11 @@
 import { FinancialStatementType, TimeSeriesInterval } from './yfinance-types'
 
 export const fetchYFinanceCookie = async () => {
-  const res = await fetch(import.meta.env.VITE_COOKIE_URL)
+  const res = await fetch(import.meta.env.VITE_COOKIE_URL, {
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0',
+    },
+  })
   const cookie = res.headers.getSetCookie()[0]
   return cookie
 }
@@ -10,12 +14,11 @@ export const fetchYFinanceCrumb = async (cookie: string) => {
   const res = await fetch(import.meta.env.VITE_CRUMB_URL, {
     headers: {
       'Cookie': cookie,
-      'User-Agent':
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0',
     },
   })
   if (!res.ok) {
-    throw new Error(`Status: ${res.status}; Body: ${await res.text()}`)
+    throw new Error(`fetchYFinanceCrumb; Status: ${res.status}; Body: ${await res.text()}`)
   }
   const crumb = await res.text()
   return crumb
