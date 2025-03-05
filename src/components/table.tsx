@@ -5,7 +5,7 @@ export const Table: ParentComponent<JSX.HTMLAttributes<HTMLTableElement>> = (pro
   return (
     <table
       {...props}
-      class={cn('table-fixed rounded-lg border border-primary bg-background font-mono text-background-fg', props.class)}
+      class={cn('border-primary bg-background text-background-fg table-fixed rounded-lg border font-mono', props.class)}
     >
       {props.children}
     </table>
@@ -38,7 +38,7 @@ export const TableRow: ParentComponent<JSX.HTMLAttributes<HTMLTableRowElement>> 
 
 export const TableHead: ParentComponent<JSX.ThHTMLAttributes<HTMLTableCellElement>> = (props) => {
   return (
-    <th {...props} class={cn('border border-primary px-4 py-2 font-bold', props.class)}>
+    <th {...props} class={cn('border-primary border px-4 py-2 font-bold', props.class)}>
       {props.children}
     </th>
   )
@@ -46,7 +46,7 @@ export const TableHead: ParentComponent<JSX.ThHTMLAttributes<HTMLTableCellElemen
 
 export const TableCell: ParentComponent<JSX.TdHTMLAttributes<HTMLTableCellElement>> = (props) => {
   return (
-    <td {...props} class={cn('border border-primary px-4 py-2', props.class)}>
+    <td {...props} class={cn('border-primary border px-4 py-2', props.class)}>
       {props.children}
     </td>
   )
